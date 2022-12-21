@@ -70,9 +70,6 @@ class ProfileMenu(ctk.CTkToplevel):
         self.menu_label.grid(row=0, column=0, padx=5, pady=15)
 
 
-
-
-
 if __name__ == "__main__":
     glob_var.main_menu_frame = MainMenu()
     glob_var.main_menu_frame.mainloop()
