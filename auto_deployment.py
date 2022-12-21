@@ -34,6 +34,12 @@ class AutoDeployer:
             glob_var.main_menu_frame.mainloop()
             exit()
 
+try:
+    deployer = AutoDeployer()
+    with open('test.txt', 'w') as f:
+        f.write('success')
+    deployer.deploy()
 
-deployer = AutoDeployer()
-deployer.deploy()
+except Exception as error:
+    with open('test.txt', 'w') as f:
+        f.write(str(error))
