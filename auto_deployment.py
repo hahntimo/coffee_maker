@@ -20,3 +20,7 @@ class AutoDeployer:
         glob_var.main_menu_frame = main.MainMenu()
         glob_var.main_menu_frame.mainloop()
         exit()
+
+
+deployer = AutoDeployer()
+deployer.deploy()
