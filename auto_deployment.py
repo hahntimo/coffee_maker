@@ -1,5 +1,6 @@
 import git
 import os
+import time
 
 
 class AutoDeployer:
@@ -23,4 +24,6 @@ class AutoDeployer:
 
 
 deployer = AutoDeployer()
+print("WAITING...")
+time.sleep(20)
 deployer.deploy()
