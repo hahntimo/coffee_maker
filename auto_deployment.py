@@ -6,7 +6,10 @@ import time
 class AutoDeployer:
     def __init__(self):
         self.branch = "main"
-        self.repository = git.Repo(os.path.dirname(os.path.abspath("__main__")))
+        self.repo_path = os.path.dirname(os.path.abspath("__main__"))
+        print("REPO_PATH:", self.repo_path)
+        print("FILE_PATH:", os.path.dirname(os.path.abspath(__file__)))
+        self.repository = git.Repo(self.repo_path)
 
     def deploy(self):
         self.repository.git.checkout(self.branch)
@@ -24,6 +27,4 @@ class AutoDeployer:
 
 
 deployer = AutoDeployer()
-print("WAITING...")
-time.sleep(20)
 deployer.deploy()
