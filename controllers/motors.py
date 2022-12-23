@@ -26,7 +26,7 @@ class PitcherSpinnerController:
             GPIO.cleanup()
             print("PIN CLEANED")
         except:
-
+            pass
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
