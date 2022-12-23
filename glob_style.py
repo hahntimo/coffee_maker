@@ -6,3 +6,4 @@ appearance_mode = "dark"
 color_theme = "blue"
 cursor = "none"
 
+menu_button_font = None

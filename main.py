@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from GUI import analyse_menu
+from controllers import motors
 import glob_var
 import glob_style
 
@@ -15,22 +16,23 @@ class MainMenu(ctk.CTk):
         self.attributes('-fullscreen', True)
         self.config(cursor=glob_style.cursor)
 
+        glob_style.menu_button_font = ctk.CTkFont(size=30, weight="bold")
+
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure((1, 2, 3), weight=1)
-        self.button_font = ctk.CTkFont(size=30, weight="bold")
 
         self.version_label = ctk.CTkLabel(self, text=f"Version: {glob_var.__version__}")
         self.version_label.grid(row=0, column=0, sticky="new", padx=5, pady=5)
 
-        self.start_brew_menu_button = ctk.CTkButton(self, text="Brühen", font=self.button_font,
+        self.start_brew_menu_button = ctk.CTkButton(self, text="Brühen", font=glob_style.menu_button_font,
                                                     command=self.start_brew_menu)
         self.start_brew_menu_button.grid(row=1, column=0, sticky="news", padx=7, pady=7)
 
-        self.profile_menu_button = ctk.CTkButton(self, text="Profile", font=self.button_font,
+        self.profile_menu_button = ctk.CTkButton(self, text="Profile", font=glob_style.menu_button_font,
                                                  command=self.start_profile_menu)
         self.profile_menu_button.grid(row=2, column=0, sticky="news", padx=7, pady=7)
 
-        self.analysis_menu_button = ctk.CTkButton(self, text="Analyse", font=self.button_font,
+        self.analysis_menu_button = ctk.CTkButton(self, text="Analyse", font=glob_style.menu_button_font,
                                                   command=self.start_analysis_menu)
         self.analysis_menu_button.grid(row=3, column=0, sticky="news", padx=7, pady=7)
 
@@ -52,6 +54,7 @@ class BrewingMenu(ctk.CTkToplevel):
         super().__init__()
         self.geometry(glob_style.screen_resolution)
         self.attributes('-fullscreen', True)
+        self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure(0, weight=1)
 
@@ -71,7 +74,12 @@ class ProfileMenu(ctk.CTkToplevel):
         self.menu_label.grid(row=0, column=0, padx=5, pady=15)
 
 
-if __name__ == "__main__":
+def run():
+    glob_var.pitcher_spinner_controller = motors.PitcherSpinnerController()
     glob_var.main_menu_frame = MainMenu()
     glob_var.main_menu_frame.mainloop()
     exit()
+
+
+if __name__ == "__main__":
+    run()

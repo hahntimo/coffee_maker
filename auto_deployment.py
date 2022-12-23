@@ -31,8 +31,7 @@ class AutoDeployer:
         import main
         import glob_var
 
-        glob_var.main_menu_frame = main.MainMenu()
-        glob_var.main_menu_frame.mainloop()
+        main.run()
         exit()
 
 
