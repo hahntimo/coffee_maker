@@ -22,6 +22,12 @@ class PitcherSpinnerController:
         self.setup_pins()
 
     def setup_pins(self):
+        try:
+            GPIO.cleanup()
+            print("PIN CLEANED")
+        except:
+
+
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
         GPIO.setup(self.STEP_PIN, GPIO.OUT)
