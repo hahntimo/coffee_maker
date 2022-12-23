@@ -57,15 +57,17 @@ class PitcherSpinnerController:
             self.running = True
             self.direction = 1
             GPIO.output(self.DIR_PIN, 1)
-            self.delay = 0.3
+            self.delay = 0.001
 
     def handler(self):
         while True:
+            step_counter = 0
             while self.running:
-                print(f"subthread: {self.revolution} | {self.direction}")
+                print(f"subthread: {self.revolution} | {self.direction} | {step_counter}")
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
                 time.sleep(self.delay)
                 GPIO.output(self.STEP_PIN, GPIO.LOW)
                 time.sleep(self.delay)
+                step_counter += 1
 
 
