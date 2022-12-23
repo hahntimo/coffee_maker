@@ -4,5 +4,5 @@ import customtkinter as ctk
 screen_resolution = "800x480"
 appearance_mode = "dark"
 color_theme = "blue"
-
+cursor = "none"
 

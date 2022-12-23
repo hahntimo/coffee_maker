@@ -13,6 +13,7 @@ class MainMenu(ctk.CTk):
         super().__init__()
         self.geometry(glob_style.screen_resolution)
         self.attributes('-fullscreen', True)
+        self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure((1, 2, 3), weight=1)
