@@ -31,6 +31,8 @@ class PitcherSpinnerController:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
         GPIO.setup(self.STEP_PIN, GPIO.OUT)
+        GPIO.output(self.DIR_PIN, self.direction)
+
         GPIO.setup((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), GPIO.OUT)
         GPIO.output((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), (1, 0, 1))
 
@@ -48,13 +50,13 @@ class PitcherSpinnerController:
         elif new_revolution > 0:
             self.running = True
             self.direction = 0
-            GPIO.output(self.DIR_PIN, self.direction)
+            # GPIO.output(self.DIR_PIN, self.direction)
             self.delay = 0.0000508
 
         elif new_revolution < 0:
             self.running = True
             self.direction = 1
-            GPIO.output(self.DIR_PIN, self.direction)
+            # GPIO.output(self.DIR_PIN, self.direction)
             self.delay = 0.0000508
 
     def handler(self):
