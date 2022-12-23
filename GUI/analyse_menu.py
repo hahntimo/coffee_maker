@@ -119,6 +119,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
             dir_substring = " links"
 
         self.revolution_label_text.set(f"Drehzahl: {abs(revolution)} U/min{dir_substring}")
+        glob_var.pitcher_spinner_controller.change_parameters(revolution)
 
 
 class HeatingElementMenu(ctk.CTkToplevel):

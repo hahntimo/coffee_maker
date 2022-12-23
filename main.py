@@ -76,7 +76,10 @@ class ProfileMenu(ctk.CTkToplevel):
 
 def run():
     glob_var.pitcher_spinner_controller = motors.PitcherSpinnerController()
+    glob_var.pitcher_spinner_controller.start_thread()
+
     glob_var.main_menu_frame = MainMenu()
+
     glob_var.main_menu_frame.mainloop()
     exit()
 
