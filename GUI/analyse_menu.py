@@ -98,7 +98,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
         self.revolution_label = ctk.CTkLabel(self, textvariable=self.revolution_label_text, font=ctk.CTkFont(size=40))
         self.revolution_label.grid(row=1, column=0, sticky="news", padx=7, pady=7)
 
-        self.revolution_slider = ctk.CTkSlider(self, from_=-20, to=20, number_of_steps=40,
+        self.revolution_slider = ctk.CTkSlider(self, from_=-40, to=40, number_of_steps=40,
                                                variable=self.revolution_u_min, command=self.change_revolution)
         self.revolution_slider.grid(row=2, column=0, sticky="news", padx=7, pady=7)
 

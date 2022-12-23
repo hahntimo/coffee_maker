@@ -13,11 +13,13 @@ class PitcherSpinnerController:
         self.direction = 0  # 0 = CW | 1 = CCW
         self.running = False
         self.delay = 0
+        self.spr = 4000  # steps per revolution
         self.DIR_PIN = 24
         self.STEP_PIN = 23
         self.MOTOR_PIN_1 = 14
         self.MOTOR_PIN_2 = 15
         self.MOTOR_PIN_3 = 18
+
 
         self.setup_pins()
 
@@ -51,13 +53,13 @@ class PitcherSpinnerController:
             self.running = True
             self.direction = 0
             GPIO.output(self.DIR_PIN, 0)
-            self.delay = 0.0000508
+            self.delay = 60 / (self.revolution * self.spr)
 
         elif new_revolution < 0:
             self.running = True
             self.direction = 1
             GPIO.output(self.DIR_PIN, 1)
-            self.delay = 0.001
+            self.delay = 60 / (self.revolution * self.spr)
 
     def handler(self):
         while True:
