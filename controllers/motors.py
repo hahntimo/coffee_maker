@@ -25,7 +25,7 @@ class PitcherSpinnerController:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
         GPIO.setup(self.STEP_PIN, GPIO.OUT)
-        GPIO.output((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), (1, 0, 1))
+        GPIO.setup((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), (1, 0, 1))
 
     def start_thread(self):
         threading.Thread(target=self.handler).start()
