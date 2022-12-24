@@ -6,7 +6,7 @@ try:
     import RPi.GPIO as GPIO
 except:
     pass
-queue
+
 
 class PitcherSpinController(multiprocessing.Process):
     def __init__(self, task_queue):
