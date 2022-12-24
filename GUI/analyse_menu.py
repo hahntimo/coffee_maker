@@ -76,7 +76,7 @@ class AnalysisMenu(ctk.CTkToplevel):
             self.attributes("-fullscreen", True)
 
     def shutdown_app(self):
-        glob_var.pitcher_spinner_process.join()
+        # glob_var.pitcher_spinner_process.join()
         GPIO.cleanup()
         print("clean_up")
         quit()
