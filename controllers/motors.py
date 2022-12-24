@@ -32,7 +32,7 @@ class PitcherSpinController(multiprocessing.Process):
             new_task = self.task_queue.get()
             self.change_parameters(new_revolution=new_task)
 
-    def setup_pins(self):
+    def set_pins(self):
         try:
             GPIO.cleanup()
             print("PIN CLEANED")
