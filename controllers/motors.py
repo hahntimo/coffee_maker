@@ -72,6 +72,8 @@ class PitcherSpinController(multiprocessing.Process):
             self.delay = 60 / (self.revolution * self.spr)
             self.running = True
 
+        print("DIRECTION:", self.direction)
+
     def handler(self):
         while True:
             GPIO.output(self.DIR_PIN, self.direction)
