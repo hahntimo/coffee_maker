@@ -50,16 +50,18 @@ class PitcherSpinnerController:
             self.running = False
 
         elif new_revolution > 0:
-            self.running = True
+            self.running = False
             self.direction = 0
             GPIO.output(self.DIR_PIN, 0)
             self.delay = 60 / (self.revolution * self.spr)
+            self.running = True
 
         elif new_revolution < 0:
-            self.running = True
+            self.running = False
             self.direction = 1
             GPIO.output(self.DIR_PIN, 1)
             self.delay = 60 / (self.revolution * self.spr)
+            self.running = True
 
     def handler(self):
         while True:
