@@ -33,10 +33,11 @@ class PitcherSpinController(multiprocessing.Process):
             elif new_task == "shutdown":
                 GPIO.cleanup()
                 print("CLEANUP SUCCESS")
-                for _ in range(10):
-                    print("sub kill attempt:", _)
-                    os._exit(_)
-
+                for _ in reversed(range(10)):
+                    try:
+                        os._exit(_)
+                    except:
+                        print("sub kill fail", _)
 
     def set_pins(self):
         GPIO.setmode(GPIO.BCM)
