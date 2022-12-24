@@ -39,7 +39,7 @@ class PitcherSpinController(multiprocessing.Process):
         except:
             pass
 
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
         GPIO.setup(self.STEP_PIN, GPIO.OUT)
         # GPIO.output(self.DIR_PIN, self.direction)
