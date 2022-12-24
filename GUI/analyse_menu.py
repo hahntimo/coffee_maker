@@ -77,8 +77,8 @@ class AnalysisMenu(ctk.CTkToplevel):
     def shutdown_app(self):
         glob_var.pitcher_spinner_queue.put(("shutdown", None))
         for _ in range(10):
-            print("master attempt:", _)
-            sys.exit()
+            print("master kill attempt:", _)
+            os.exit()
 
 
 class PumpMenu(ctk.CTkToplevel):
