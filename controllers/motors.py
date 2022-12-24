@@ -10,7 +10,7 @@ except:
 class PitcherSpinnerController:
     def __init__(self):
         self.revolution = 0  # revolutions per minute
-        self.direction = 0  # 0 = CW | 1 = CCW
+        self.direction = 1  # 0 = CW | 1 = CCW
         self.running = False
         self.delay = 0
         self.spr = 6400  # steps per revolution
