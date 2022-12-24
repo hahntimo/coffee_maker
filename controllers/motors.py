@@ -33,7 +33,7 @@ class PitcherSpinController(multiprocessing.Process):
             elif new_task == "shutdown":
                 GPIO.cleanup()
                 print("CLEANUP SUCCESS")
-                for _ in reversed(range(10)):
+                for _ in range(10):
                     try:
                         os._exit(_)
                     except:
@@ -87,3 +87,9 @@ class PitcherSpinController(multiprocessing.Process):
     def cleanup(self):
         GPIO.cleanup()
         print("CLEANUP SUCCESS")
+
+
+class PumpController(multiprocessing.Process):
+    def __init__(self, task_queue):
+        multiprocessing.Process.__init__(self)
+        self.task_queue = task_queue

@@ -76,7 +76,7 @@ class AnalysisMenu(ctk.CTkToplevel):
 
     def shutdown_app(self):
         glob_var.pitcher_spinner_queue.put(("shutdown", None))
-        for _ in reversed(range(10)):
+        for _ in range(10):
             try:
                 os._exit(_)
             except:
@@ -90,13 +90,44 @@ class PumpMenu(ctk.CTkToplevel):
         self.attributes("-fullscreen", True)
         self.config(cursor=glob_style.cursor)
 
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure((1, 2, 3), weight=1)
+
+        self.pump_volume_label_text = ctk.StringVar(self, "STOP")
+        self.milliliters_per_minute = ctk.IntVar(self, 0)
+
+        self.menu_label = ctk.CTkLabel(self, text="Pumpe", font=ctk.CTkFont(size=25))
+        self.menu_label.grid(row=0, column=0, padx=5, pady=15)
+
+        self.pump_volume_label = ctk.CTkLabel(self, textvariable=self.pump_volume_label_text, font=ctk.CTkFont(size=40))
+        self.pump_volume_label.grid(row=1, column=0, sticky="news", padx=5, pady=15)
+
+        self.pump_volume_slider = ctk.CTkSlider(self, from_=0, to=500, number_of_steps=100,
+                                                variable=self.milliliters_per_minute, command=self.change_pump_volume)
+        self.pump_volume_slider.grid(row=2, column=0, sticky="news", padx=7, pady=7)
+
+        self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
+                                                command=self.return_menu, height=40)
+        self.return_menu_button.grid(row=4, column=0, sticky="we", padx=7, pady=7)
+
+    def return_menu(self):
+        glob_var.analysis_menu_frame.deiconify()
+        self.withdraw()
+
+    def change_pump_volume(self, *args):
+        milliliters_per_minute = self.milliliters_per_minute.get()
+        if milliliters_per_minute == 0:
+            self.pump_volume_label_text.set("STOP")
+        else:
+            self.pump_volume_label_text.set(f"Milliliter/Min: {milliliters_per_minute}")
+
 
 class PitcherSpinnerMenu(ctk.CTkToplevel):
     def __init__(self):
         super().__init__()
-        # self.geometry(glob_style.screen_resolution)
-        # self.attributes("-fullscreen", True)
-        # self.config(cursor=glob_style.cursor)
+        self.geometry(glob_style.screen_resolution)
+        self.attributes("-fullscreen", True)
+        self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure((1, 2, 3), weight=1)

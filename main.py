@@ -1,8 +1,9 @@
+import sys
+
 import customtkinter as ctk
 import multiprocessing
 
 from GUI import analyse_menu
-from controllers import motors
 import glob_var
 import glob_style
 
@@ -76,16 +77,19 @@ class ProfileMenu(ctk.CTkToplevel):
 
 
 def run():
-    # glob_var.pitcher_spinner_controller = motors.PitcherSpinnerController()
-    # glob_var.pitcher_spinner_controller.start_thread()
-
     glob_var.pitcher_spinner_queue = multiprocessing.JoinableQueue()
-    glob_var.pitcher_spinner_process = motors.PitcherSpinController(glob_var.pitcher_spinner_queue)
-    glob_var.pitcher_spinner_process.start()
+
+    operating_platform = sys.platform
+    if operating_platform == "linux":
+        from controllers import motors
+        glob_var.pitcher_spinner_process = motors.PitcherSpinController(glob_var.pitcher_spinner_queue)
+        glob_var.pitcher_spinner_process.start()
+    else:
+        print("OS:", operating_platform)
 
     glob_var.main_menu_frame = MainMenu()
     glob_var.main_menu_frame.mainloop()
-    exit()
+    quit()
 
 
 if __name__ == "__main__":
