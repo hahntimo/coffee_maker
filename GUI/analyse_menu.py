@@ -76,10 +76,6 @@ class AnalysisMenu(ctk.CTkToplevel):
 
     def shutdown_app(self):
         glob_var.pitcher_spinner_queue.put(("shutdown", None))
-        print("PROCESS KILLED")
-        for _ in range(10):
-            print(_)
-            sys.exit()
 
 
 class PumpMenu(ctk.CTkToplevel):
