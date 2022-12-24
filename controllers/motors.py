@@ -35,7 +35,7 @@ class PitcherSpinController(multiprocessing.Process):
                 print("CLEANUP SUCCESS")
                 for _ in range(10):
                     print("sub kill attempt:", _)
-                    os.exit()
+                    os._exit(_)
 
 
     def set_pins(self):
