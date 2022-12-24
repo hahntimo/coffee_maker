@@ -90,25 +90,34 @@ class PumpMenu(ctk.CTkToplevel):
         self.attributes("-fullscreen", True)
         self.config(cursor=glob_style.cursor)
 
-        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((1, 2, 3), weight=1)
 
         self.pump_volume_label_text = ctk.StringVar(self, "STOP")
         self.milliliters_per_minute = ctk.IntVar(self, 0)
 
         self.menu_label = ctk.CTkLabel(self, text="Pumpe", font=ctk.CTkFont(size=25))
-        self.menu_label.grid(row=0, column=0, padx=5, pady=15)
+        self.menu_label.grid(row=0, column=0, columnspan=2, padx=5, pady=15)
 
-        self.pump_volume_label = ctk.CTkLabel(self, textvariable=self.pump_volume_label_text, font=ctk.CTkFont(size=40))
-        self.pump_volume_label.grid(row=1, column=0, sticky="news", padx=5, pady=15)
+        self.volume_label = ctk.CTkLabel(self, text="Volumen:", font=glob_style.menu_button_font)
+        self.volume_label.grid(row=1, column=0, sticky="news", padx=7, pady=7)
+        self.volume_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
+        self.volume_input.grid(row=1, column=1, sticky="news", padx=7, pady=7)
 
-        self.pump_volume_slider = ctk.CTkSlider(self, from_=0, to=500, number_of_steps=100,
-                                                variable=self.milliliters_per_minute, command=self.change_pump_volume)
-        self.pump_volume_slider.grid(row=2, column=0, sticky="news", padx=7, pady=7)
+        self.time_label = ctk.CTkLabel(self, text="Sekunden:", font=glob_style.menu_button_font)
+        self.time_label.grid(row=2, column=0, sticky="news", padx=7, pady=7)
+        self.time_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
+        self.time_input.grid(row=2, column=1, sticky="news", padx=7, pady=7)
+
+        self.progress_bar = ctk.CTkProgressBar(self)
+        self.progress_bar.grid(row=3, column=0, columnspan=2, sticky="we", padx=7, pady=7)
+
+        self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font)
+        self.start_stop_button.grid(row=4, column=0, columnspan=2, padx=7, pady=7)
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
-        self.return_menu_button.grid(row=4, column=0, sticky="we", padx=7, pady=7)
+        self.return_menu_button.grid(row=5, column=0, columnspan=2, sticky="we", padx=7, pady=7)
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
