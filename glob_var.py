@@ -13,3 +13,4 @@ analyse_heating_element_frame = None
 
 # controllers
 pitcher_spinner_queue = None
+pitcher_spinner_process = None

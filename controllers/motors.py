@@ -1,11 +1,7 @@
 import threading
 import time
 import multiprocessing
-
-try:
-    import RPi.GPIO as GPIO
-except:
-    pass
+import RPi.GPIO as GPIO
 
 
 class PitcherSpinController(multiprocessing.Process):
@@ -33,12 +29,6 @@ class PitcherSpinController(multiprocessing.Process):
             self.change_parameters(new_revolution=new_task)
 
     def set_pins(self):
-        try:
-            GPIO.cleanup()
-            print("PIN CLEANED")
-        except:
-            pass
-
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
         GPIO.setup(self.STEP_PIN, GPIO.OUT)

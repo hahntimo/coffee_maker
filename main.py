@@ -80,7 +80,8 @@ def run():
     # glob_var.pitcher_spinner_controller.start_thread()
 
     glob_var.pitcher_spinner_queue = multiprocessing.JoinableQueue()
-    motors.PitcherSpinController(glob_var.pitcher_spinner_queue).start()
+    glob_var.pitcher_spinner_process = motors.PitcherSpinController(glob_var.pitcher_spinner_queue)
+    glob_var.pitcher_spinner_process.start()
 
     glob_var.main_menu_frame = MainMenu()
     glob_var.main_menu_frame.mainloop()
