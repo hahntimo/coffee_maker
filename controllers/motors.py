@@ -65,7 +65,7 @@ class PitcherSpinnerController:
 
     def handler(self):
         while True:
-            while self.running:
+            if self.running:
                 # print(f"subthread: {self.revolution} | {self.direction} | {step_counter}")
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
                 time.sleep(self.delay)
