@@ -76,9 +76,8 @@ class AnalysisMenu(ctk.CTkToplevel):
             self.attributes("-fullscreen", True)
 
     def shutdown_app(self):
-        # glob_var.pitcher_spinner_process.join()
-        GPIO.cleanup()
-        print("clean_up")
+        glob_var.pitcher_spinner_queue.put(("shutdown", None))
+        print("PROCESS KILLED")
         quit()
         print("test1")
         quit()
@@ -139,8 +138,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
             label_text = "STOP"
 
         self.revolution_label_text.set(label_text)
-        # glob_var.pitcher_spinner_controller.change_parameters(revolution)
-        glob_var.pitcher_spinner_queue.put(revolution)
+        glob_var.pitcher_spinner_queue.put(("change_parameters", revolution))
 
 
 class HeatingElementMenu(ctk.CTkToplevel):

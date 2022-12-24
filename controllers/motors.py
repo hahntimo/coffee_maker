@@ -25,8 +25,14 @@ class PitcherSpinController(multiprocessing.Process):
         self.set_pins()
 
         while True:
-            new_task = self.task_queue.get()
-            self.change_parameters(new_revolution=new_task)
+            new_task, data = self.task_queue.get()
+            print(new_task, data)
+            if new_task == "change_parameters":
+                self.change_parameters(new_revolution=data)
+            elif new_task == "shutdown":
+                GPIO.cleanup()
+                print("CLEANUP SUCCESS")
+                self.close()
 
     def set_pins(self):
         GPIO.setmode(GPIO.BCM)
@@ -72,3 +78,7 @@ class PitcherSpinController(multiprocessing.Process):
                 time.sleep(self.delay)
                 GPIO.output(self.STEP_PIN, GPIO.LOW)
                 time.sleep(self.delay)
+
+    def cleanup(self):
+        GPIO.cleanup()
+        print("CLEANUP SUCCESS")
