@@ -74,6 +74,7 @@ class PitcherSpinController(multiprocessing.Process):
 
     def handler(self):
         while True:
+            GPIO.output(self.DIR_PIN, self.direction)
             if self.running:
                 # print(f"subthread: {self.revolution} | {self.direction} | {step_counter}")
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
