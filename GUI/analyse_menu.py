@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import sys
 import os
-import RPi.GPIO as GPIO
 
 sys.path.append(os.path.dirname(os.path.abspath("__main__")))
 import glob_var
@@ -78,13 +77,9 @@ class AnalysisMenu(ctk.CTkToplevel):
     def shutdown_app(self):
         glob_var.pitcher_spinner_queue.put(("shutdown", None))
         print("PROCESS KILLED")
-        quit()
-        print("test1")
-        quit()
-        print("test2")
-        quit()
-        print("test3")
-        quit()
+        for _ in range(10):
+            print(_)
+            sys.exit()
 
 
 class PumpMenu(ctk.CTkToplevel):
