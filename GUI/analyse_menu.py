@@ -43,7 +43,7 @@ class AnalysisMenu(ctk.CTkToplevel):
                                                       height=40, font=ctk.CTkFont(size=20))
         self.minimize_maximize_button.grid(row=4, column=1, sticky="we", padx=7, pady=7)
 
-        self.shutdown_button = ctk.CTkButton(self, text="schließen", command=self.shutdown, height=40,
+        self.shutdown_button = ctk.CTkButton(self, text="schließen", command=self.shutdown_app, height=40,
                                              font=ctk.CTkFont(size=20))
         self.shutdown_button.grid(row=4, column=2, sticky="we", padx=7, pady=7)
 
@@ -75,9 +75,16 @@ class AnalysisMenu(ctk.CTkToplevel):
             self.minimize_maximize_button.configure(text="minimieren")
             self.attributes("-fullscreen", True)
 
-    def shutdown(self):
+    def shutdown_app(self):
         glob_var.pitcher_spinner_process.join()
         GPIO.cleanup()
+        print("clean_up")
+        quit()
+        print("test1")
+        quit()
+        print("test2")
+        quit()
+        print("test3")
         quit()
 
 
