@@ -82,14 +82,14 @@ class PumpMenu(ctk.CTkToplevel):
 class PitcherSpinnerMenu(ctk.CTkToplevel):
     def __init__(self):
         super().__init__()
-        self.geometry(glob_style.screen_resolution)
-        self.attributes("-fullscreen", True)
-        self.config(cursor=glob_style.cursor)
+        # self.geometry(glob_style.screen_resolution)
+        # self.attributes("-fullscreen", True)
+        # self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure((1, 2, 3), weight=1)
 
-        self.revolution_label_text = ctk.StringVar(self, "Drehzahl: 0 U/min")
+        self.revolution_label_text = ctk.StringVar(self, "STOP")
         self.revolution_u_min = ctk.IntVar(self, 0)
 
         self.menu_label = ctk.CTkLabel(self, text="Drehteller", font=ctk.CTkFont(size=25))
@@ -117,9 +117,13 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
             dir_substring = " rechts"
         elif revolution < 0:
             dir_substring = " links"
+        label_text = f"Drehzahl: {abs(revolution)} U/min{dir_substring}"
+        if revolution == 0:
+            label_text = "STOP"
 
-        self.revolution_label_text.set(f"Drehzahl: {abs(revolution)} U/min{dir_substring}")
-        glob_var.pitcher_spinner_controller.change_parameters(revolution)
+        self.revolution_label_text.set(label_text)
+        # glob_var.pitcher_spinner_controller.change_parameters(revolution)
+        glob_var.pitcher_spinner_queue.put(revolution)
 
 
 class HeatingElementMenu(ctk.CTkToplevel):

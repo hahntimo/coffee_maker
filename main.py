@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import multiprocessing
 
 from GUI import analyse_menu
 from controllers import motors
@@ -75,11 +76,13 @@ class ProfileMenu(ctk.CTkToplevel):
 
 
 def run():
-    glob_var.pitcher_spinner_controller = motors.PitcherSpinnerController()
-    glob_var.pitcher_spinner_controller.start_thread()
+    # glob_var.pitcher_spinner_controller = motors.PitcherSpinnerController()
+    # glob_var.pitcher_spinner_controller.start_thread()
+
+    glob_var.pitcher_spinner_queue = multiprocessing.JoinableQueue()
+    motors.PitcherSpinController(glob_var.pitcher_spinner_queue).start()
 
     glob_var.main_menu_frame = MainMenu()
-
     glob_var.main_menu_frame.mainloop()
     exit()
 

@@ -12,4 +12,4 @@ analyse_pump_frame = None
 analyse_heating_element_frame = None
 
 # controllers
-pitcher_spinner_controller = None
+pitcher_spinner_queue = None

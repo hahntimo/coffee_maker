@@ -1,14 +1,18 @@
 import threading
 import time
+import multiprocessing
 
 try:
     import RPi.GPIO as GPIO
 except:
     pass
+queue
 
+class PitcherSpinController(multiprocessing.Process):
+    def __init__(self, task_queue):
+        multiprocessing.Process.__init__(self)
+        self.task_queue = task_queue
 
-class PitcherSpinnerController:
-    def __init__(self):
         self.revolution = 0  # revolutions per minute
         self.direction = 1  # 0 = CW | 1 = CCW
         self.running = False
@@ -20,8 +24,13 @@ class PitcherSpinnerController:
         self.MOTOR_PIN_2 = 15
         self.MOTOR_PIN_3 = 18
 
+    def run(self):
+        self.start_thread()
+        self.set_pins()
 
-        self.setup_pins()
+        while True:
+            new_task = self.task_queue.get()
+            self.change_parameters(new_revolution=new_task)
 
     def setup_pins(self):
         try:
@@ -71,5 +80,3 @@ class PitcherSpinnerController:
                 time.sleep(self.delay)
                 GPIO.output(self.STEP_PIN, GPIO.LOW)
                 time.sleep(self.delay)
-
-
