@@ -39,10 +39,10 @@ class PitcherSpinController(multiprocessing.Process):
         except:
             pass
 
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
         GPIO.setup(self.STEP_PIN, GPIO.OUT)
-        GPIO.output(self.DIR_PIN, self.direction)
+        # GPIO.output(self.DIR_PIN, self.direction)
 
         GPIO.setup((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), GPIO.OUT)
         GPIO.output((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), (1, 0, 1))
@@ -61,14 +61,14 @@ class PitcherSpinController(multiprocessing.Process):
         elif new_revolution > 0:
             self.running = False
             self.direction = 0
-            GPIO.output(self.DIR_PIN, 0)
+            GPIO.output(self.DIR_PIN, self.direction)
             self.delay = 60 / (self.revolution * self.spr)
             self.running = True
 
         elif new_revolution < 0:
             self.running = False
             self.direction = 1
-            GPIO.output(self.DIR_PIN, 1)
+            GPIO.output(self.DIR_PIN, self.direction)
             self.delay = 60 / (self.revolution * self.spr)
             self.running = True
 
@@ -76,7 +76,6 @@ class PitcherSpinController(multiprocessing.Process):
 
     def handler(self):
         while True:
-            GPIO.output(self.DIR_PIN, self.direction)
             if self.running:
                 # print(f"subthread: {self.revolution} | {self.direction} | {step_counter}")
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
