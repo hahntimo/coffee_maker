@@ -63,8 +63,9 @@ class PitcherSpinController(multiprocessing.Process):
         threading.Thread(target=self.handler).start()
 
     def calibrate(self):
-        test_steps = 10000
         self.running = False
+        test_steps = 10000
+        print("START CALIBRATION")
         start_time = time.time()
         for step in range(test_steps):
             GPIO.output(self.STEP_PIN, GPIO.HIGH)
