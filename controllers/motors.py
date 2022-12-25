@@ -1,8 +1,10 @@
 import threading
 import time
 import os
+import json
 import multiprocessing
 import RPi.GPIO as GPIO
+import datetime
 
 
 class PitcherSpinController(multiprocessing.Process):
@@ -10,18 +12,24 @@ class PitcherSpinController(multiprocessing.Process):
         multiprocessing.Process.__init__(self)
         self.task_queue = task_queue
 
-        self.revolution = 0  # revolutions per minute
-        self.direction = 1  # 0 = CW | 1 = CCW
+        self.revolution = 0
+        self.direction = 1
         self.running = False
-        self.delay = 0
+        self.theoretical_delay = 0  # theoretical pause between steps
+        self.runtime_delay = 0      # delay occurring through runtime delay
+        self.actual_delay = 0       # self.theoretical_delay - self.runtime_delay
         self.spr = 6400  # steps per revolution
-        self.DIR_PIN = 19  # 24
-        self.STEP_PIN = 26  # 23
-        self.MOTOR_PIN_1 = 16  # 14
-        self.MOTOR_PIN_2 = 20  # 15
-        self.MOTOR_PIN_3 = 21  # 18
+        self.DIR_PIN = 19
+        self.STEP_PIN = 26
+        self.MOTOR_PIN_1 = 16
+        self.MOTOR_PIN_2 = 20
+        self.MOTOR_PIN_3 = 21
 
     def run(self):
+        with open("configs\\calibration.json", "r") as json_file:
+            config_json = json.load(json_file)
+        self.runtime_delay = config_json["spin_motor_delay"]
+        print("RUNTIME_DELAY SPINNER:", self.runtime_delay)
         self.start_thread()
         self.set_pins()
 
@@ -38,6 +46,8 @@ class PitcherSpinController(multiprocessing.Process):
                         os._exit(_)
                     except:
                         print("sub kill fail", _)
+            elif new_task == "calibrate":
+                self.calibrate()
 
     def set_pins(self):
         GPIO.setmode(GPIO.BCM)
@@ -51,6 +61,29 @@ class PitcherSpinController(multiprocessing.Process):
     def start_thread(self):
         threading.Thread(target=self.handler).start()
 
+    def calibrate(self):
+        test_steps = 10000
+        self.running = False
+        start_time = time.time()
+        for step in range(test_steps):
+            GPIO.output(self.STEP_PIN, GPIO.HIGH)
+            time.sleep(self.actual_delay)
+            GPIO.output(self.STEP_PIN, GPIO.LOW)
+            time.sleep(self.actual_delay)
+        end_time = time.time()
+        diff = end_time - start_time
+        delay_per_substep = diff/(test_steps*2)
+        print("CALIBRATE RESULT:", delay_per_substep)
+        self.runtime_delay = delay_per_substep
+
+        with open("configs\\calibration.json", "r") as json_file:
+            config_json = json.load(json_file)
+        config_json["spin_motor_delay"] = self.runtime_delay
+        with open("configs/calibration.json", "w") as json_file:
+            json.dump(config_json, json_file)
+
+        print("CALIBRATION DONE")
+
     def change_parameters(self, new_revolution):
         self.revolution = abs(new_revolution)
         self.running = True if self.revolution != 0 else False
@@ -63,14 +96,14 @@ class PitcherSpinController(multiprocessing.Process):
             self.running = False
             self.direction = 0
             GPIO.output(self.DIR_PIN, self.direction)
-            self.delay = 60 / (self.revolution * self.spr)
+            self.actual_delay = (60 / (self.revolution * self.spr)) - self.runtime_delay
             self.running = True
 
         elif new_revolution < 0:
             self.running = False
             self.direction = 1
             GPIO.output(self.DIR_PIN, self.direction)
-            self.delay = 60 / (self.revolution * self.spr)
+            self.actual_delay = (60 / (self.revolution * self.spr)) - self.runtime_delay
             self.running = True
 
         print("DIRECTION:", self.direction)
@@ -78,11 +111,10 @@ class PitcherSpinController(multiprocessing.Process):
     def handler(self):
         while True:
             if self.running:
-                # print(f"subthread: {self.revolution} | {self.direction} | {step_counter}")
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
-                time.sleep(self.delay)
+                time.sleep(self.actual_delay)
                 GPIO.output(self.STEP_PIN, GPIO.LOW)
-                time.sleep(self.delay)
+                time.sleep(self.actual_delay)
 
     def cleanup(self):
         GPIO.cleanup()

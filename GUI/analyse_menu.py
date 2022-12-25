@@ -139,7 +139,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
         self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure((1, 2, 3), weight=1)
+        self.grid_rowconfigure((1, 2, 3, 4), weight=1)
 
         self.revolution_label_text = ctk.StringVar(self, "STOP")
         self.revolution_u_min = ctk.IntVar(self, 0)
@@ -150,9 +150,13 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
         self.revolution_label = ctk.CTkLabel(self, textvariable=self.revolution_label_text, font=ctk.CTkFont(size=40))
         self.revolution_label.grid(row=1, column=0, sticky="news", padx=7, pady=7)
 
-        self.revolution_slider = ctk.CTkSlider(self, from_=-40, to=40, number_of_steps=40,
+        self.revolution_slider = ctk.CTkSlider(self, from_=-40, to=40, number_of_steps=80,
                                                variable=self.revolution_u_min, command=self.change_revolution)
         self.revolution_slider.grid(row=2, column=0, sticky="news", padx=7, pady=7)
+
+        self.calibration_button = ctk.CTkButton(self, text="kalibrieren", font=glob_style.menu_button_font,
+                                                command=self.calibrate)
+        self.calibration_button.grid(row=3, column=0, sticky="news", padx=7, pady=7)
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
@@ -175,6 +179,10 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
 
         self.revolution_label_text.set(label_text)
         glob_var.pitcher_spinner_queue.put(("change_parameters", revolution))
+
+    @staticmethod
+    def calibrate():
+        glob_var.pitcher_spinner_queue.put(("calibrate", None))
 
 
 class HeatingElementMenu(ctk.CTkToplevel):
