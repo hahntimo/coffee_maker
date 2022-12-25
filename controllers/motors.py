@@ -10,7 +10,7 @@ import datetime
 class PitcherSpinController(multiprocessing.Process):
     def __init__(self, task_queue):
         multiprocessing.Process.__init__(self)
-        self.config_json_path = f"{os.path.dirname(os.path.abspath(__file__))}\\configs\\calibration.json"
+        self.config_json_path = f"{os.path.dirname(os.path.abspath('__main__'))}/configs/calibration.json"
         self.task_queue = task_queue
 
         self.revolution = 0
