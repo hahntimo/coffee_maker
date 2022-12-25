@@ -117,7 +117,7 @@ class PumpMenu(ctk.CTkToplevel):
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
-        self.return_menu_button.grid(row=5, column=0, columnspan=2, sticky="we", padx=7, pady=7)
+        self.return_menu_button.grid(row=5, column=0, columnspan=2, sticky="wes", padx=7, pady=7)
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
@@ -160,7 +160,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
-        self.return_menu_button.grid(row=4, column=0, sticky="we", padx=7, pady=7)
+        self.return_menu_button.grid(row=4, column=0, sticky="wes", padx=7, pady=7)
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
@@ -188,3 +188,54 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
 class HeatingElementMenu(ctk.CTkToplevel):
     def __init__(self):
         super().__init__()
+        self.geometry(glob_style.screen_resolution)
+        self.attributes("-fullscreen", True)
+        self.config(cursor=glob_style.cursor)
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure((1, 2, 3, 4), weight=1)
+
+        self.heating_up_bool = False
+
+        self.temperature_set_label_text = ctk.StringVar(self, "Zieltemperatur: 22 °C")
+        self.temperature_actual_label_text = ctk.StringVar(self, "Wassertemperatur: ---")
+        self.temperature_set = ctk.IntVar(self, 23)
+
+        self.menu_label = ctk.CTkLabel(self, text="Heizelement", font=ctk.CTkFont(size=25))
+        self.menu_label.grid(row=0, column=0, padx=5, pady=15)
+
+        self.temperature_set_label = ctk.CTkLabel(self, textvariable=self.temperature_set_label_text,
+                                                  font=ctk.CTkFont(size=40))
+        self.temperature_set_label.grid(row=1, column=0, padx=7, pady=7)
+
+        self.temperature_slider = ctk.CTkSlider(self, from_=23, to=99, number_of_steps=76, variable=self.temperature_set,
+                                                command=self.change_temperature)
+        self.temperature_slider.grid(row=2, column=0, padx=7, pady=7)
+
+        self.temperature_actual_label = ctk.CTkLabel(self, textvariable=self.temperature_actual_label_text,
+                                                     font=ctk.CTkFont(size=40))
+        self.temperature_actual_label.grid(row=3, column=0, padx=7, pady=7)
+
+        self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font,
+                                               command=self.start_stop_heating)
+        self.start_stop_button.grid(row=4, column=0, padx=7, pady=7)
+
+        self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
+                                                command=self.return_menu, height=40)
+        self.return_menu_button.grid(row=5, column=0, sticky="wes", padx=7, pady=7)
+
+    def change_temperature(self, *args):
+        temperature = self.temperature_set.get()
+        self.temperature_set_label_text.set(f"Zieltemperatur: {temperature} °C")
+
+    def start_stop_heating(self):
+        if self.heating_up_bool:
+            self.start_stop_button.configure(text="start")
+            self.heating_up_bool = False
+        else:
+            self.start_stop_button.configure(text="stop")
+            self.heating_up_bool = True
+
+    def return_menu(self):
+        glob_var.analysis_menu_frame.deiconify()
+        self.withdraw()
