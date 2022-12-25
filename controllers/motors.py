@@ -72,7 +72,7 @@ class PitcherSpinController(multiprocessing.Process):
             GPIO.output(self.STEP_PIN, GPIO.LOW)
         end_time = time.time()
         diff = end_time - start_time
-        delay_per_substep = diff/test_steps
+        delay_per_substep = diff/(test_steps*2)
         print("CALIBRATE RESULT:", delay_per_substep)
         self.runtime_delay = delay_per_substep
 
