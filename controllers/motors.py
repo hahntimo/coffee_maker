@@ -15,11 +15,11 @@ class PitcherSpinController(multiprocessing.Process):
         self.running = False
         self.delay = 0
         self.spr = 6400  # steps per revolution
-        self.DIR_PIN = 24
-        self.STEP_PIN = 23
-        self.MOTOR_PIN_1 = 14
-        self.MOTOR_PIN_2 = 15
-        self.MOTOR_PIN_3 = 18
+        self.DIR_PIN = 19  # 24
+        self.STEP_PIN = 26  # 23
+        self.MOTOR_PIN_1 = 16  # 14
+        self.MOTOR_PIN_2 = 20  # 15
+        self.MOTOR_PIN_3 = 21  # 18
 
     def run(self):
         self.start_thread()
