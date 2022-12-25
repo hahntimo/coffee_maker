@@ -69,9 +69,7 @@ class PitcherSpinController(multiprocessing.Process):
         start_time = time.time()
         for step in range(test_steps):
             GPIO.output(self.STEP_PIN, GPIO.HIGH)
-            time.sleep(self.actual_delay)
             GPIO.output(self.STEP_PIN, GPIO.LOW)
-            time.sleep(self.actual_delay)
         end_time = time.time()
         diff = end_time - start_time
         delay_per_substep = diff/(test_steps*2)
@@ -99,6 +97,8 @@ class PitcherSpinController(multiprocessing.Process):
             self.direction = 0
             GPIO.output(self.DIR_PIN, self.direction)
             self.actual_delay = (60 / (self.revolution * self.spr)) - self.runtime_delay
+            if self.actual_delay < 0:
+                self.actual_delay = 0
             self.running = True
 
         elif new_revolution < 0:
@@ -106,9 +106,11 @@ class PitcherSpinController(multiprocessing.Process):
             self.direction = 1
             GPIO.output(self.DIR_PIN, self.direction)
             self.actual_delay = (60 / (self.revolution * self.spr)) - self.runtime_delay
+            if self.actual_delay < 0:
+                self.actual_delay = 0
             self.running = True
 
-        print("DIRECTION:", self.direction)
+        print("DIRECTION:", self.direction, "DELAY:", self.actual_delay)
 
     def handler(self):
         while True:
