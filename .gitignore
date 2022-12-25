@@ -1,5 +1,7 @@
 local.py
+example.py
 *.txt
 __pycache__/
 .idea/
 /__pycache__
+configs/calibration.json

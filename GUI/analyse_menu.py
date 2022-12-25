@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from tkinter import messagebox
 import sys
 import os
 
@@ -75,7 +76,7 @@ class AnalysisMenu(ctk.CTkToplevel):
             self.attributes("-fullscreen", True)
 
     def shutdown_app(self):
-        glob_var.pitcher_spinner_queue.put(("shutdown", None))
+        glob_var.pitcher_spinner_input_queue.put(("shutdown", None))
         for _ in range(10):
             try:
                 os._exit(_)
@@ -109,7 +110,7 @@ class PumpMenu(ctk.CTkToplevel):
         self.time_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.time_input.grid(row=2, column=1, sticky="news", padx=7, pady=7)
 
-        self.progress_bar = ctk.CTkProgressBar(self)
+        self.progress_bar = ctk.CTkProgressBar(self, length=100, mode="determinate")
         self.progress_bar.grid(row=3, column=0, columnspan=2, sticky="we", padx=7, pady=7)
 
         self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font)
@@ -178,11 +179,17 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
             label_text = "STOP"
 
         self.revolution_label_text.set(label_text)
-        glob_var.pitcher_spinner_queue.put(("change_parameters", revolution))
+        glob_var.pitcher_spinner_input_queue.put(("change_parameters", revolution))
 
-    @staticmethod
-    def calibrate():
-        glob_var.pitcher_spinner_queue.put(("calibrate", None))
+    def calibrate(self):
+        self.calibration_button.configure(text="Kalibrierung läuft...")
+        glob_var.pitcher_spinner_input_queue.put(("calibrate", None))
+        while True:
+            return_type, data = glob_var.pitcher_spinner_output_queue.get()
+            if return_type == "calibration_done":
+                messagebox.showinfo(title="Kalibrierung", message=f"Delay: {data}")
+                break
+        self.calibration_button.configure(text="kalibrieren")
 
 
 class HeatingElementMenu(ctk.CTkToplevel):

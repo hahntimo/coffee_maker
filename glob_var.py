@@ -1,3 +1,5 @@
+import multiprocessing
+
 __version__ = "0.0.2"
 
 # main menu
@@ -12,5 +14,14 @@ analyse_pump_frame = None
 analyse_heating_element_frame = None
 
 # controllers
-pitcher_spinner_queue = None
 pitcher_spinner_process = None
+pitcher_spinner_input_queue = multiprocessing.Queue()
+pitcher_spinner_output_queue = multiprocessing.Queue()
+
+pump_process = None
+pump_process_input_queue = multiprocessing.Queue()
+pump_process_output_queue = multiprocessing.Queue()
+
+heater_process = None
+heater_process_input_queue = multiprocessing.Queue()
+heater_process_output_queue = multiprocessing.Queue()

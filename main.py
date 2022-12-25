@@ -77,13 +77,21 @@ class ProfileMenu(ctk.CTkToplevel):
 
 
 def run():
-    glob_var.pitcher_spinner_queue = multiprocessing.JoinableQueue()
-
     operating_platform = sys.platform
     if operating_platform == "linux":
         from controllers import motors
-        glob_var.pitcher_spinner_process = motors.PitcherSpinController(glob_var.pitcher_spinner_queue)
+
+        # pitcher spinner
+        glob_var.pitcher_spinner_process = \
+            motors.PitcherSpinController(task_queue=glob_var.pitcher_spinner_input_queue,
+                                         output_queue=glob_var.pitcher_spinner_output_queue)
         glob_var.pitcher_spinner_process.start()
+
+        # pump
+
+        # heater
+
+
     else:
         print("OS:", operating_platform)
 
