@@ -10,6 +10,7 @@ import datetime
 class PitcherSpinController(multiprocessing.Process):
     def __init__(self, task_queue):
         multiprocessing.Process.__init__(self)
+        self.config_json_path = f"{os.path.dirname(os.path.abspath(__file__))}\\configs\\calibration.json"
         self.task_queue = task_queue
 
         self.revolution = 0
@@ -26,7 +27,7 @@ class PitcherSpinController(multiprocessing.Process):
         self.MOTOR_PIN_3 = 21
 
     def run(self):
-        with open("configs\\calibration.json", "r") as json_file:
+        with open(self.config_json_path, "r") as json_file:
             config_json = json.load(json_file)
         self.runtime_delay = config_json["spin_motor_delay"]
         print("RUNTIME_DELAY SPINNER:", self.runtime_delay)
@@ -76,10 +77,10 @@ class PitcherSpinController(multiprocessing.Process):
         print("CALIBRATE RESULT:", delay_per_substep)
         self.runtime_delay = delay_per_substep
 
-        with open("configs\\calibration.json", "r") as json_file:
+        with open(self.config_json_path, "r") as json_file:
             config_json = json.load(json_file)
         config_json["spin_motor_delay"] = self.runtime_delay
-        with open("configs/calibration.json", "w") as json_file:
+        with open(self.config_json_path, "w") as json_file:
             json.dump(config_json, json_file)
 
         print("CALIBRATION DONE")
