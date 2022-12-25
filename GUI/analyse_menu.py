@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 import sys
 import os
+import time
 
 sys.path.append(os.path.dirname(os.path.abspath("__main__")))
 import glob_var
@@ -185,6 +186,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
         self.calibration_button.configure(text="Kalibrierung läuft...")
         glob_var.pitcher_spinner_input_queue.put(("calibrate", None))
         while True:
+            time.sleep(0.1)
             return_type, data = glob_var.pitcher_spinner_output_queue.get()
             if return_type == "calibration_done":
                 messagebox.showinfo(title="Kalibrierung", message=f"Delay: {data}")
