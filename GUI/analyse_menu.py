@@ -7,6 +7,7 @@ import time
 sys.path.append(os.path.dirname(os.path.abspath("__main__")))
 import glob_var
 import glob_style
+from GUI import helper
 
 
 class AnalysisMenu(ctk.CTkToplevel):
@@ -97,6 +98,7 @@ class PumpMenu(ctk.CTkToplevel):
 
         self.pump_volume_label_text = ctk.StringVar(self, "STOP")
         self.milliliters_per_minute = ctk.IntVar(self, 0)
+        self.pumping_bool = False
 
         self.menu_label = ctk.CTkLabel(self, text="Pumpe", font=ctk.CTkFont(size=25))
         self.menu_label.grid(row=0, column=0, columnspan=2, padx=5, pady=15)
@@ -105,13 +107,15 @@ class PumpMenu(ctk.CTkToplevel):
         self.volume_label.grid(row=1, column=0, sticky="news", padx=7, pady=7)
         self.volume_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.volume_input.grid(row=1, column=1, sticky="news", padx=7, pady=7)
+        self.volume_input.bind("<FocusIn>", lambda _: self.start_input(self.volume_input, "float"))
 
-        self.time_label = ctk.CTkLabel(self, text="Sekunden:", font=glob_style.menu_button_font)
+        self.time_label = ctk.CTkLabel(self, text="Minuten:", font=glob_style.menu_button_font)
         self.time_label.grid(row=2, column=0, sticky="news", padx=7, pady=7)
         self.time_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.time_input.grid(row=2, column=1, sticky="news", padx=7, pady=7)
+        self.time_input.bind("<FocusIn>", lambda _: self.start_input(self.time_input, "time"))
 
-        self.progress_bar = ctk.CTkProgressBar(self, length=100, mode="determinate")
+        self.progress_bar = ctk.CTkProgressBar(self, mode="determinate")
         self.progress_bar.grid(row=3, column=0, columnspan=2, sticky="we", padx=7, pady=7)
 
         self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font)
@@ -131,6 +135,17 @@ class PumpMenu(ctk.CTkToplevel):
             self.pump_volume_label_text.set("STOP")
         else:
             self.pump_volume_label_text.set(f"Milliliter/Min: {milliliters_per_minute}")
+
+    def start_stop_pump(self):
+        if self.pumping_bool:
+            self.start_stop_button.configure(text="stop")
+            glob_var.pump_process_input_queue.put("start", self.volume_input.get(), self.time_input.get())
+        else:
+            self.start_stop_button.configure(text="start")
+            glob_var.pump_process_input_queue.put("stop", None, None)
+
+    def start_input(self, element, input_type):
+        helper.Numpad(element, input_type)
 
 
 class PitcherSpinnerMenu(ctk.CTkToplevel):
