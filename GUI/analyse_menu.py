@@ -107,13 +107,13 @@ class PumpMenu(ctk.CTkToplevel):
         self.volume_label.grid(row=1, column=0, sticky="news", padx=7, pady=7)
         self.volume_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.volume_input.grid(row=1, column=1, sticky="news", padx=7, pady=7)
-        self.volume_input.bind("<FocusIn>", lambda _: self.start_input(self.volume_input, "float"))
+        self.volume_input.bind("<Button-1>", lambda _: self.start_input(self.volume_input, "float"))
 
         self.time_label = ctk.CTkLabel(self, text="Minuten:", font=glob_style.menu_button_font)
         self.time_label.grid(row=2, column=0, sticky="news", padx=7, pady=7)
         self.time_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.time_input.grid(row=2, column=1, sticky="news", padx=7, pady=7)
-        self.time_input.bind("<FocusIn>", lambda _: self.start_input(self.time_input, "time"))
+        self.time_input.bind("<Button-1>", lambda _: self.start_input(self.time_input, "time"))
 
         self.progress_bar = ctk.CTkProgressBar(self, mode="determinate")
         self.progress_bar.grid(row=3, column=0, columnspan=2, sticky="we", padx=7, pady=7)
