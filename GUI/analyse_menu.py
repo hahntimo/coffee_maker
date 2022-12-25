@@ -184,6 +184,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
 
     def calibrate(self):
         self.calibration_button.configure(text="Kalibrierung läuft...")
+        time.sleep(0.5)
         glob_var.pitcher_spinner_input_queue.put(("calibrate", None))
         while True:
             time.sleep(0.1)
