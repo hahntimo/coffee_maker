@@ -19,7 +19,7 @@ class PitcherSpinController(multiprocessing.Process):
         self.theoretical_delay = 0  # theoretical pause between steps
         self.runtime_delay = 0      # delay occurring through runtime delay
         self.actual_delay = 0       # self.theoretical_delay - self.runtime_delay
-        self.spr = 6400  # steps per revolution
+        self.spr = 12800  # 6400  # steps per revolution
         self.DIR_PIN = 19
         self.STEP_PIN = 26
         self.MOTOR_PIN_1 = 16
