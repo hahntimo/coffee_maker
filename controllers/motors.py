@@ -63,15 +63,20 @@ class PitcherSpinController(multiprocessing.Process):
         threading.Thread(target=self.handler).start()
 
     def calibrate(self):
-        self.running = False
         test_steps = 10000
+        test_sleep = 0.01
+
         print("START CALIBRATION")
+        self.running = False
         start_time = time.time()
         for step in range(test_steps):
             GPIO.output(self.STEP_PIN, GPIO.HIGH)
+            time.sleep(test_sleep)
             GPIO.output(self.STEP_PIN, GPIO.LOW)
+            time.sleep(test_sleep)
         end_time = time.time()
         diff = end_time - start_time
+        diff -= (test_steps * 2 * test_sleep)
         delay_per_substep = diff/(test_steps*2)
         print("CALIBRATE RESULT:", delay_per_substep)
         self.runtime_delay = delay_per_substep
