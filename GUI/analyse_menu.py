@@ -119,12 +119,16 @@ class PumpMenu(ctk.CTkToplevel):
                                                                    input_type="time",
                                                                    info_message="Pumpzeit in Minuten:"))
 
-        self.progress_bar = ctk.CTkProgressBar(self, mode="determinate")
-        self.progress_bar.grid(row=3, column=0, columnspan=2, sticky="we", padx=7, pady=7)
-
         self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font,
                                                command=self.start_stop_pump)
-        self.start_stop_button.grid(row=4, column=0, columnspan=2, padx=7, pady=7)
+        self.start_stop_button.grid(row=3, column=0, columnspan=2, sticky="news", padx=7, pady=7)
+
+        self.calibration_button = ctk.CTkButton(self, text="kalibrieren", font=glob_style.menu_button_font)
+        self.calibration_button.grid(row=4, column=0, sticky="news", padx=7, pady=7)
+
+        self.set_flowrate_button = ctk.CTkButton(self, text="Flussrate justieren", font=glob_style.menu_button_font,
+                                                 command=self.set_flowrate)
+        self.set_flowrate_button.grid(row=4, column=1, sticky="news", padx=7, pady=7)
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
@@ -134,12 +138,9 @@ class PumpMenu(ctk.CTkToplevel):
         glob_var.analysis_menu_frame.deiconify()
         self.withdraw()
 
-    def change_pump_volume(self, *args):
-        milliliters_per_minute = self.milliliters_per_minute.get()
-        if milliliters_per_minute == 0:
-            self.pump_volume_label_text.set("STOP")
-        else:
-            self.pump_volume_label_text.set(f"Milliliter/Min: {milliliters_per_minute}")
+    def set_flowrate(self):
+        helper.InfoMessage(title="Flussrate justieren", message="Bitte messbecher unterstellen")
+        print("DONE")
 
     def start_stop_pump(self):
         if self.pumping_bool:
@@ -253,7 +254,7 @@ class HeatingElementMenu(ctk.CTkToplevel):
 
         self.temperature_slider = ctk.CTkSlider(self, from_=23, to=99, number_of_steps=76, variable=self.temperature_set,
                                                 command=self.change_temperature)
-        self.temperature_slider.grid(row=2, column=0, padx=7, pady=7)
+        self.temperature_slider.grid(row=2, column=0, sticky="news", padx=7, pady=7)
 
         self.temperature_actual_label = ctk.CTkLabel(self, textvariable=self.temperature_actual_label_text,
                                                      font=ctk.CTkFont(size=40))

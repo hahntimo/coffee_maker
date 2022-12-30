@@ -100,7 +100,16 @@ class InfoMessage(ctk.CTkToplevel):
     def __init__(self, title="Info", message=""):
         super().__init__()
         self.message = message
-        self.title = title
+        self.title(title)
+
+        win_height = 200
+        win_width = 600
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x_coordinate = int((screen_width/2) - (win_width/2))
+        y_coordinate = int((screen_height/2) - (win_height/2))
+
+        self.geometry(f"{win_width}x{win_height}+{x_coordinate}+{y_coordinate}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
