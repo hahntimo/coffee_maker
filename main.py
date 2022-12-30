@@ -40,15 +40,15 @@ class MainMenu(ctk.CTk):
 
     def start_brew_menu(self):
         glob_var.brewing_menu_frame = BrewingMenu()
-        self.withdraw()
+        # self.withdraw()
 
     def start_profile_menu(self):
         glob_var.profile_menu_frame = ProfileMenu()
-        self.withdraw()
+        # self.withdraw()
 
     def start_analysis_menu(self):
         glob_var.analysis_menu_frame = analyse_menu.AnalysisMenu()
-        self.withdraw()
+        # self.withdraw()
 
 
 class BrewingMenu(ctk.CTkToplevel):
