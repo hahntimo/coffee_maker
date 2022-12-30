@@ -154,7 +154,7 @@ class PumpMenu(ctk.CTkToplevel):
                 self.start_stop_button.configure(text="stop")
                 time_input = self.time_input.get().split(":")
                 if len(time_input) == 2:
-                    time_in_seconds = int(time_input[0])*60 + (int(time_input[1])*60)
+                    time_in_seconds = int(time_input[0])*60 + int(time_input[1])
                 else:
                     time_in_seconds = int(time_input[0])*60
 
