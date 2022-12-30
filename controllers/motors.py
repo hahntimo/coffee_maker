@@ -38,7 +38,7 @@ class PitcherSpinController(multiprocessing.Process):
 
         while True:
             new_task, data = self.task_queue.get()
-            print(new_task, data)
+
             if new_task == "change_parameters":
                 self.change_parameters(new_revolution=data)
             elif new_task == "shutdown":
@@ -144,11 +144,15 @@ class PumpController(multiprocessing.Process):
 
         self.revolution = 0
         self.direction = 1
-        self.running = False
+        self.task_iteration_counter = 0
+
         self.theoretical_delay = 0  # theoretical pause between steps
         self.runtime_delay = 0  # delay occurring through runtime delay
         self.actual_delay = 0  # self.theoretical_delay - self.runtime_delay
         self.spr = 6400 * 2  # steps per revolution
+        self.ml_per_revolution = 5
+        self.task_target_steps = 0
+
         self.DIR_PIN = 24
         self.STEP_PIN = 23
         self.MOTOR_PIN_1 = 14
@@ -158,6 +162,18 @@ class PumpController(multiprocessing.Process):
     def run(self):
         self.set_pins()
         threading.Thread(target=self.handler).start()
+
+        while True:
+            new_task, volume_in_ml, time_in_seconds = self.task_queue.get()
+            if new_task == "pump_task":
+                self.actual_delay = 1 / self.spr
+                self.task_target_steps = int((volume_in_ml / self.ml_per_revolution) * (self.spr / 2))
+                self.actual_delay = time_in_seconds/(self.task_target_steps * 2)
+
+                print("TASK_TARGET_STEPS:", self.task_target_steps, "---", "ACTUAL_DELAY", self.actual_delay)
+
+            elif new_task == "stop":
+                self.task_target_steps = 0
 
     def set_pins(self):
         GPIO.setmode(GPIO.BCM)
@@ -169,6 +185,11 @@ class PumpController(multiprocessing.Process):
 
     def handler(self):
         while True:
-            if self.running:
-                pass
+            if self.task_iteration_counter != 0:
+                self.task_iteration_counter -= 1
+
+                GPIO.output(self.STEP_PIN, GPIO.HIGH)
+                time.sleep(self.actual_delay)
+                GPIO.output(self.STEP_PIN, GPIO.LOW)
+                time.sleep(self.actual_delay)
 

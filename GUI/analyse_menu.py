@@ -103,7 +103,7 @@ class PumpMenu(ctk.CTkToplevel):
         self.menu_label = ctk.CTkLabel(self, text="Pumpe", font=ctk.CTkFont(size=25))
         self.menu_label.grid(row=0, column=0, columnspan=2, padx=5, pady=15)
 
-        self.volume_label = ctk.CTkLabel(self, text="Volumen:", font=glob_style.menu_button_font)
+        self.volume_label = ctk.CTkLabel(self, text="Volumen in ml:", font=glob_style.menu_button_font)
         self.volume_label.grid(row=1, column=0, sticky="news", padx=7, pady=7)
         self.volume_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.volume_input.grid(row=1, column=1, sticky="news", padx=7, pady=7)
@@ -145,6 +145,8 @@ class PumpMenu(ctk.CTkToplevel):
         if self.pumping_bool:
             self.start_stop_button.configure(text="start")
             glob_var.pump_process_input_queue.put("stop", None, None)
+            self.pumping_bool = False
+
         else:
             if self.volume_input.get() == "":
                 helper.InfoMessage(message="Fehlende Angabe: Pumpvolumen")
@@ -154,14 +156,14 @@ class PumpMenu(ctk.CTkToplevel):
                 self.start_stop_button.configure(text="stop")
                 time_input = self.time_input.get().split(":")
                 if len(time_input) == 2:
-                    time_in_seconds = int(time_input[0])*60 + int(time_input[1])
+                    time_in_seconds = (int(time_input[0]) if time_input[0] != "" else 0) * 60 + \
+                                      (int(time_input[1]) if time_input[1] != "" else 0)
                 else:
-                    time_in_seconds = int(time_input[0])*60
+                    time_in_seconds = (int(time_input[0]) if time_input[0] != "" else 0) * 60
 
-                print("TIME_IN_SECONDS", time_in_seconds)
-
-
-                glob_var.pump_process_input_queue.put(("start", self.volume_input.get(), time_in_seconds))
+                volume_in_ml = float(self.volume_input.get().replace(",", "."))
+                glob_var.pump_process_input_queue.put(("pump_task", volume_in_ml, time_in_seconds))
+                self.pumping_bool = True
 
 
 class PitcherSpinnerMenu(ctk.CTkToplevel):
