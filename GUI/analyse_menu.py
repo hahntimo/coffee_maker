@@ -94,7 +94,7 @@ class PumpMenu(ctk.CTkToplevel):
         self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure((0, 1), weight=1)
-        self.grid_rowconfigure((1, 2, 3), weight=1)
+        self.grid_rowconfigure((0, 1, 2, 3), weight=1)
 
         self.pump_volume_label_text = ctk.StringVar(self, "STOP")
         self.milliliters_per_minute = ctk.IntVar(self, 0)
@@ -107,18 +107,23 @@ class PumpMenu(ctk.CTkToplevel):
         self.volume_label.grid(row=1, column=0, sticky="news", padx=7, pady=7)
         self.volume_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.volume_input.grid(row=1, column=1, sticky="news", padx=7, pady=7)
-        self.volume_input.bind("<Button-1>", lambda _: self.start_input(self.volume_input, "float"))
+        self.volume_input.bind("<Button-1>", lambda _: helper.Numpad(input_field=self.volume_input,
+                                                                     input_type="float",
+                                                                     info_message="Pumpvolumen in ml:"))
 
         self.time_label = ctk.CTkLabel(self, text="Minuten:", font=glob_style.menu_button_font)
         self.time_label.grid(row=2, column=0, sticky="news", padx=7, pady=7)
         self.time_input = ctk.CTkEntry(self, font=glob_style.menu_button_font)
         self.time_input.grid(row=2, column=1, sticky="news", padx=7, pady=7)
-        self.time_input.bind("<Button-1>", lambda _: self.start_input(self.time_input, "time"))
+        self.time_input.bind("<Button-1>", lambda _: helper.Numpad(input_field=self.time_input,
+                                                                   input_type="time",
+                                                                   info_message="Pumpzeit in Minuten:"))
 
         self.progress_bar = ctk.CTkProgressBar(self, mode="determinate")
         self.progress_bar.grid(row=3, column=0, columnspan=2, sticky="we", padx=7, pady=7)
 
-        self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font)
+        self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font,
+                                               command=self.start_stop_pump)
         self.start_stop_button.grid(row=4, column=0, columnspan=2, padx=7, pady=7)
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
@@ -138,14 +143,16 @@ class PumpMenu(ctk.CTkToplevel):
 
     def start_stop_pump(self):
         if self.pumping_bool:
-            self.start_stop_button.configure(text="stop")
-            glob_var.pump_process_input_queue.put("start", self.volume_input.get(), self.time_input.get())
-        else:
             self.start_stop_button.configure(text="start")
             glob_var.pump_process_input_queue.put("stop", None, None)
-
-    def start_input(self, element, input_type):
-        helper.Numpad(element, input_type)
+        else:
+            if self.volume_input.get() == "":
+                helper.InfoMessage(message="Fehlende Angabe: Pumpvolumen")
+            elif self.time_input.get() == "":
+                helper.InfoMessage(message="Fehlende Angabe: Pumpzeit")
+            else:
+                self.start_stop_button.configure(text="stop")
+                glob_var.pump_process_input_queue.put("start", self.volume_input.get(), self.time_input.get())
 
 
 class PitcherSpinnerMenu(ctk.CTkToplevel):
@@ -205,7 +212,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
             time.sleep(0.1)
             return_type, data = glob_var.pitcher_spinner_output_queue.get()
             if return_type == "calibration_done":
-                messagebox.showinfo(title="Kalibrierung", message=f"Delay: {data}")
+                helper.InfoMessage.showinfo(title="Kalibrierung", message=f"Delay: {data}")
                 break
         self.calibration_button.configure(text="kalibrieren")
 

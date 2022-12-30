@@ -88,9 +88,11 @@ def run():
         glob_var.pitcher_spinner_process.start()
 
         # pump
+        glob_var.pump_process = motors.PumpController(task_queue=glob_var.pump_process_input_queue,
+                                                      output_queue=glob_var.pump_process_output_queue)
+        glob_var.pump_process.start()
 
         # heater
-
 
     else:
         print("OS:", operating_platform)
