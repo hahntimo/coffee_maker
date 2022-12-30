@@ -4,9 +4,9 @@ import os
 import json
 import multiprocessing
 import RPi.GPIO as GPIO
-import datetime
 
 calibration_json_path = f"{os.path.dirname(os.path.abspath('__main__'))}/configs/calibration.json"
+spinner_calibration_diff = None
 
 
 class PitcherSpinController(multiprocessing.Process):
@@ -61,25 +61,30 @@ class PitcherSpinController(multiprocessing.Process):
         GPIO.output((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), (1, 0, 1))
 
     def calibrate(self):
-        def test_run(result):
+        global spinner_calibration_diff
+
+        def test_run():
+            global spinner_calibration_diff
             start_time = time.time()
             for step in range(test_steps):
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
                 GPIO.output(self.STEP_PIN, GPIO.LOW)
             end_time = time.time()
-            result[0] = end_time - start_time
+            spinner_calibration_diff = end_time - start_time
 
         test_steps = 1000
 
         self.running = False
 
-        results = [None]
-        test_thread = threading.Thread(target=test_run, args=(results))
+        test_thread = threading.Thread(target=test_run)
         test_thread.start()
         test_thread.join()
-        diff = results[0]
-        print("DIFF FROM THREAD:", diff)
-        delay_per_substep = diff/(test_steps*2)
+
+        while spinner_calibration_diff is None:
+            time.sleep(0.1)
+
+        print("DIFF FROM THREAD:", spinner_calibration_diff)
+        delay_per_substep = spinner_calibration_diff/(test_steps*2)
 
         self.runtime_delay = delay_per_substep
 
@@ -89,6 +94,7 @@ class PitcherSpinController(multiprocessing.Process):
         with open(calibration_json_path, "w") as json_file:
             json.dump(config_json, json_file)
 
+        spinner_calibration_diff = None
         self.output_queue.put(("calibration_done", self.runtime_delay))
 
     def change_parameters(self, new_revolution):
