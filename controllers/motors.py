@@ -144,12 +144,11 @@ class PumpController(multiprocessing.Process):
 
         self.revolution = 0
         self.direction = 1
-        self.task_iteration_counter = 0
 
         self.theoretical_delay = 0  # theoretical pause between steps
         self.runtime_delay = 0  # delay occurring through runtime delay
         self.actual_delay = 0  # self.theoretical_delay - self.runtime_delay
-        self.spr = 6400 * 2  # steps per revolution
+        self.spr = 4000 * 2  # steps per revolution
         self.ml_per_revolution = 5
         self.task_target_steps = 0
 
@@ -185,8 +184,8 @@ class PumpController(multiprocessing.Process):
 
     def handler(self):
         while True:
-            if self.task_iteration_counter != 0:
-                self.task_iteration_counter -= 1
+            if self.task_target_steps != 0:
+                self.task_target_steps -= 1
 
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
                 time.sleep(self.actual_delay)
