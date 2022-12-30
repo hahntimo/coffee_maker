@@ -62,21 +62,25 @@ class PitcherSpinController(multiprocessing.Process):
 
     def calibrate(self):
         def test_run():
-            global diff
+            global diff, test_run_done
             start_time = time.time()
             for step in range(test_steps):
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
                 GPIO.output(self.STEP_PIN, GPIO.LOW)
             end_time = time.time()
             diff = end_time - start_time
-            return diff
+            test_run_done = True
 
         test_steps = 1000
 
         self.running = False
+        test_run_done = False
         diff = 0.000000000001
+
         test_thread = threading.Thread(target=test_run)
         test_thread.start()
+        while not test_run_done:
+            time.sleep(0.1)
         test_thread.join()
         print("DIFF FROM THREAD:", diff)
         delay_per_substep = diff/(test_steps*2)

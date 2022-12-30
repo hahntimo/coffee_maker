@@ -63,7 +63,7 @@ class AnalysisMenu(ctk.CTkToplevel):
 
     def return_menu(self):
         glob_var.main_menu_frame.deiconify()
-        # self.withdraw()
+        self.withdraw()
 
     def minimize_maximize(self):
         if self.fullscreen_bool:
@@ -132,7 +132,7 @@ class PumpMenu(ctk.CTkToplevel):
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
-        # self.withdraw()
+        self.withdraw()
 
     def change_pump_volume(self, *args):
         milliliters_per_minute = self.milliliters_per_minute.get()
@@ -188,7 +188,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
-        # self.withdraw()
+        self.withdraw()
 
     def change_revolution(self, *args):
         revolution = self.revolution_u_min.get()
@@ -270,4 +270,4 @@ class HeatingElementMenu(ctk.CTkToplevel):
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
-        # self.withdraw()
+        self.withdraw()
