@@ -152,7 +152,16 @@ class PumpMenu(ctk.CTkToplevel):
                 helper.InfoMessage(message="Fehlende Angabe: Pumpzeit")
             else:
                 self.start_stop_button.configure(text="stop")
-                glob_var.pump_process_input_queue.put("start", self.volume_input.get(), self.time_input.get())
+                time_input = self.time_input.get().split(":")
+                if len(time_input) == 2:
+                    time_in_seconds = int(time_input[0])*60 + (int(time_input[1])*60)
+                else:
+                    time_in_seconds = int(time_input[0])*60
+
+                print("TIME_IN_SECONDS", time_in_seconds)
+
+
+                glob_var.pump_process_input_queue.put(("start", self.volume_input.get(), time_in_seconds))
 
 
 class PitcherSpinnerMenu(ctk.CTkToplevel):
