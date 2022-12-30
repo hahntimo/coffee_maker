@@ -212,7 +212,7 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
             time.sleep(0.1)
             return_type, data = glob_var.pitcher_spinner_output_queue.get()
             if return_type == "calibration_done":
-                helper.InfoMessage.showinfo(title="Kalibrierung", message=f"Delay: {data}")
+                helper.InfoMessage(title="Kalibrierung", message=f"Delay: {data}")
                 break
         self.calibration_button.configure(text="kalibrieren")
 
