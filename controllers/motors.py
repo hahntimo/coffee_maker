@@ -211,7 +211,6 @@ class Heater(multiprocessing.Process):
 
         while True:
             new_task, data = self.task_queue.get()
-            print("NEW TASK:", new_task, data)
             if new_task == "set_temperature":
                 self.target_temperature = data
                 self.handling_task = True
@@ -223,7 +222,6 @@ class Heater(multiprocessing.Process):
         while True:
             if self.handling_task:
                 current_temp = self.sensor.get_temperature()
-                print("Current temp:", current_temp)
                 time.sleep(0.5)
                 self.output_queue.put(("current_temp", current_temp))
 

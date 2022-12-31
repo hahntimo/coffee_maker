@@ -275,11 +275,9 @@ class HeatingElementMenu(ctk.CTkToplevel):
     def update_actual_temperature(self):
         if self.heating_up_bool:
             info_type, data = glob_var.heater_process_output_queue.get()
-            print(info_type, data)
             if info_type == "current_temp":
-                self.temperature_actual_label_text.set(f"Wassertemperatur: {data} °C")
-                print("TEST 2")
-                self.after(500, self.update_actual_temperature)
+                self.temperature_actual_label_text.set(f"Wassertemperatur: {round(data, 1)} °C")
+                self.after(300, self.update_actual_temperature)
 
     def start_stop_heating(self):
         if self.heating_up_bool:
