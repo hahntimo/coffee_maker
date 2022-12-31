@@ -180,7 +180,7 @@ class PumpController(multiprocessing.Process):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.DIR_PIN, GPIO.OUT)
         GPIO.setup(self.STEP_PIN, GPIO.OUT)
-
+        GPIO.output(self.DIR_PIN, self.direction)
         GPIO.setup((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), GPIO.OUT)
         GPIO.output((self.MOTOR_PIN_1, self.MOTOR_PIN_2, self.MOTOR_PIN_3), (1, 0, 1))
 
@@ -188,6 +188,7 @@ class PumpController(multiprocessing.Process):
         while True:
             if self.task_target_steps != 0:
                 self.task_target_steps -= 1
+                print("task_target_steps:", self.task_target_steps)
 
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
                 time.sleep(self.actual_delay)
