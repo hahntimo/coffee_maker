@@ -187,8 +187,7 @@ class PumpController(multiprocessing.Process):
     def handler(self):
         while True:
             if self.task_target_steps != 0:
-                self.task_target_steps -= 1
-                print("task_target_steps:", self.task_target_steps)
+                # self.task_target_steps -= 1
 
                 GPIO.output(self.STEP_PIN, GPIO.HIGH)
                 time.sleep(self.actual_delay)
