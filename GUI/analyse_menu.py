@@ -287,7 +287,8 @@ class HeatingElementMenu(ctk.CTkToplevel):
                 info_type, data = glob_var.heater_process_output_queue.get()
                 print(info_type, data)
                 if info_type == "current_temp":
-                    self.temperature_actual_label_text.set(data)
+                    self.temperature_actual_label_text.set(f"Wassertemperatur: {data} °C")
+                    print("TEST 2")
                     time.sleep(0.3)
 
 
