@@ -272,6 +272,15 @@ class HeatingElementMenu(ctk.CTkToplevel):
         temperature = self.temperature_set.get()
         self.temperature_set_label_text.set(f"Zieltemperatur: {temperature} °C")
 
+    def update_actual_temperature(self):
+        if self.heating_up_bool:
+            info_type, data = glob_var.heater_process_output_queue.get()
+            print(info_type, data)
+            if info_type == "current_temp":
+                self.temperature_actual_label_text.set(f"Wassertemperatur: {data} °C")
+                print("TEST 2")
+                self.after(500, self.update_actual_temperature)
+
     def start_stop_heating(self):
         if self.heating_up_bool:
             self.start_stop_button.configure(text="start")
@@ -282,16 +291,7 @@ class HeatingElementMenu(ctk.CTkToplevel):
             self.heating_up_bool = True
             glob_var.heater_process_input_queue.put(("set_temperature", self.temperature_set.get()))
             print("TEST 0")
-            while self.heating_up_bool:
-                print("TEST 1")
-                info_type, data = glob_var.heater_process_output_queue.get()
-                print(info_type, data)
-                if info_type == "current_temp":
-                    self.temperature_actual_label_text.set(f"Wassertemperatur: {data} °C")
-                    print("TEST 2")
-                    time.sleep(0.3)
-
-
+            self.update_actual_temperature()
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
