@@ -276,9 +276,17 @@ class HeatingElementMenu(ctk.CTkToplevel):
         if self.heating_up_bool:
             self.start_stop_button.configure(text="start")
             self.heating_up_bool = False
+            glob_var.heater_process_input_queue.put(("stop", None))
         else:
             self.start_stop_button.configure(text="stop")
             self.heating_up_bool = True
+            glob_var.heater_process_input_queue.put(("set_temperature", self.temperature_set.get()))
+            while self.heating_up_bool:
+                info_type, data = glob_var.heater_process_output_queue.get()
+                if info_type == "current_temp":
+                    self.temperature_actual_label_text.set(data)
+
+
 
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()

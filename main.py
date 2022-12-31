@@ -93,6 +93,9 @@ def run():
         glob_var.pump_process.start()
 
         # heater
+        glob_var.heater_process = motors.Heater(task_queue=glob_var.heater_process_input_queue,
+                                                output_queue=glob_var.heater_process_output_queue)
+        glob_var.heater_process.start()
 
     else:
         print("OS:", operating_platform)
