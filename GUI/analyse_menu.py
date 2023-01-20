@@ -8,16 +8,12 @@ sys.path.append(os.path.dirname(os.path.abspath("__main__")))
 import glob_var
 import glob_style
 from GUI import helper
+from main import SubMenu
 
 
-class AnalysisMenu(ctk.CTkToplevel):
-    def __init__(self):
-        super().__init__()
-        self.geometry(glob_style.screen_resolution)
-        self.attributes("-fullscreen", True)
-        self.config(cursor=glob_style.cursor)
-
-        self.fullscreen_bool = True
+class AnalysisMenu(SubMenu):
+    def __init__(self, dry_run):
+        super().__init__(dry_run)
 
         self.grid_columnconfigure((0, 1, 2), weight=1)
         self.grid_rowconfigure((1, 2, 3), weight=1)
@@ -37,8 +33,6 @@ class AnalysisMenu(ctk.CTkToplevel):
                                                       command=self.start_heating_element_menu)
         self.start_heater_menu_button.grid(row=3, column=0, columnspan=3, sticky="news", padx=7, pady=7)
 
-        self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
-                                                command=self.return_menu, height=40)
         self.return_menu_button.grid(row=4, column=0, sticky="we", padx=7, pady=7)
 
         self.minimize_maximize_button = ctk.CTkButton(self, text="minimireren", command=self.minimize_maximize,
@@ -50,15 +44,15 @@ class AnalysisMenu(ctk.CTkToplevel):
         self.shutdown_button.grid(row=4, column=2, sticky="we", padx=7, pady=7)
 
     def start_pump_menu(self):
-        glob_var.analyse_pump_frame = PumpMenu()
+        glob_var.analyse_pump_frame = PumpMenu(self.dry_run)
         # self.withdraw()
 
     def start_pitcher_spinner_menu(self):
-        glob_var.analyse_pitcher_spinner_frame = PitcherSpinnerMenu()
+        glob_var.analyse_pitcher_spinner_frame = PitcherSpinnerMenu(self.dry_run)
         # self.withdraw()
 
     def start_heating_element_menu(self):
-        glob_var.analyse_heating_element_frame = HeatingElementMenu()
+        glob_var.analyse_heating_element_frame = HeatingElementMenu(self.dry_run)
         # self.withdraw()
 
     def return_menu(self):
@@ -86,13 +80,9 @@ class AnalysisMenu(ctk.CTkToplevel):
                 print("master kill fail", _)
 
 
-class PumpMenu(ctk.CTkToplevel):
-    def __init__(self):
-        super().__init__()
-        self.geometry(glob_style.screen_resolution)
-        self.attributes("-fullscreen", True)
-        self.config(cursor=glob_style.cursor)
-
+class PumpMenu(SubMenu):
+    def __init__(self, dry_run):
+        super().__init__(dry_run)
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((0, 1, 2, 3), weight=1)
 
@@ -109,7 +99,8 @@ class PumpMenu(ctk.CTkToplevel):
         self.volume_input.grid(row=1, column=1, sticky="news", padx=7, pady=7)
         self.volume_input.bind("<Button-1>", lambda _: helper.Numpad(input_field=self.volume_input,
                                                                      input_type="float",
-                                                                     info_message="Pumpvolumen in ml:"))
+                                                                     info_message="Pumpvolumen in ml:",
+                                                                     dry_run=self.dry_run))
 
         self.time_label = ctk.CTkLabel(self, text="Minuten:", font=glob_style.menu_button_font)
         self.time_label.grid(row=2, column=0, sticky="news", padx=7, pady=7)
@@ -117,7 +108,8 @@ class PumpMenu(ctk.CTkToplevel):
         self.time_input.grid(row=2, column=1, sticky="news", padx=7, pady=7)
         self.time_input.bind("<Button-1>", lambda _: helper.Numpad(input_field=self.time_input,
                                                                    input_type="time",
-                                                                   info_message="Pumpzeit in Minuten:"))
+                                                                   info_message="Pumpzeit in Minuten:",
+                                                                   dry_run=self.dry_run))
 
         self.start_stop_button = ctk.CTkButton(self, text="Start", font=glob_style.menu_button_font,
                                                command=self.start_stop_pump)
@@ -130,8 +122,7 @@ class PumpMenu(ctk.CTkToplevel):
                                                  command=self.set_flowrate)
         self.set_flowrate_button.grid(row=4, column=1, sticky="news", padx=7, pady=7)
 
-        self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
-                                                command=self.return_menu, height=40)
+
         self.return_menu_button.grid(row=5, column=0, columnspan=2, sticky="wes", padx=7, pady=7)
 
     def return_menu(self):
@@ -145,7 +136,7 @@ class PumpMenu(ctk.CTkToplevel):
     def start_stop_pump(self):
         if self.pumping_bool:
             self.start_stop_button.configure(text="start")
-            glob_var.pump_process_input_queue.put("stop", None, None)
+            glob_var.pump_process_input_queue.put("stop", 0, 0)
             self.pumping_bool = False
 
         else:
@@ -167,13 +158,9 @@ class PumpMenu(ctk.CTkToplevel):
                 self.pumping_bool = True
 
 
-class PitcherSpinnerMenu(ctk.CTkToplevel):
-    def __init__(self):
-        super().__init__()
-        self.geometry(glob_style.screen_resolution)
-        self.attributes("-fullscreen", True)
-        self.config(cursor=glob_style.cursor)
-
+class PitcherSpinnerMenu(SubMenu):
+    def __init__(self, dry_run):
+        super().__init__(dry_run)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure((1, 2, 3, 4), weight=1)
 
@@ -194,8 +181,6 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
                                                 command=self.calibrate)
         self.calibration_button.grid(row=3, column=0, sticky="news", padx=7, pady=7)
 
-        self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
-                                                command=self.return_menu, height=40)
         self.return_menu_button.grid(row=4, column=0, sticky="wes", padx=7, pady=7)
 
     def return_menu(self):
@@ -229,15 +214,14 @@ class PitcherSpinnerMenu(ctk.CTkToplevel):
         self.calibration_button.configure(text="kalibrieren")
 
 
-class HeatingElementMenu(ctk.CTkToplevel):
-    def __init__(self):
-        super().__init__()
-        self.geometry(glob_style.screen_resolution)
-        self.attributes("-fullscreen", True)
-        self.config(cursor=glob_style.cursor)
-
+class HeatingElementMenu(SubMenu):
+    def __init__(self, dry_run):
+        super().__init__(dry_run)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure((1, 2, 3, 4), weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_rowconfigure(4, weight=1)
 
         self.heating_up_bool = False
 
@@ -264,8 +248,6 @@ class HeatingElementMenu(ctk.CTkToplevel):
                                                command=self.start_stop_heating)
         self.start_stop_button.grid(row=4, column=0, padx=7, pady=7)
 
-        self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
-                                                command=self.return_menu, height=40)
         self.return_menu_button.grid(row=5, column=0, sticky="wes", padx=7, pady=7)
 
     def change_temperature(self, *args):

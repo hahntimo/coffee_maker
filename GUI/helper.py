@@ -1,15 +1,12 @@
 import customtkinter as ctk
 
 import glob_style
+from main import SubMenu
 
 
-class Numpad(ctk.CTkToplevel):
-    def __init__(self, input_field, input_type, info_message):
-        super().__init__()
-        self.geometry(glob_style.screen_resolution)
-        self.attributes("-fullscreen", True)
-        self.config(cursor=glob_style.cursor)
-
+class Numpad(SubMenu):
+    def __init__(self, input_field, input_type, info_message, dry_run):
+        super().__init__(dry_run)
         self.input_field = input_field
         self.input_type = input_type
         self.info_message = info_message
