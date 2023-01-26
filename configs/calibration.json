@@ -1,1 +1,1 @@
-{"spin_motor_delay": 1e-06, "pump_motor_delay": 1e-06}
+{"spin_motor_delay": 1e-06, "pump_motor_delay": 1e-06, "pump_ml_per_rotation":  5.0}

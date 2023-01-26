@@ -127,7 +127,7 @@ class PumpMenu(ctk.CTkToplevel):
         self.calibration_button.grid(row=4, column=0, sticky="news", padx=7, pady=7)
 
         self.set_flowrate_button = ctk.CTkButton(self, text="Flussrate justieren", font=glob_style.menu_button_font,
-                                                 command=self.set_flowrate)
+                                                 command=self.flow_rate_calibration)
         self.set_flowrate_button.grid(row=4, column=1, sticky="news", padx=7, pady=7)
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
@@ -138,9 +138,20 @@ class PumpMenu(ctk.CTkToplevel):
         glob_var.analysis_menu_frame.deiconify()
         self.withdraw()
 
-    def set_flowrate(self):
-        helper.InfoMessage(title="Flussrate justieren", message="Bitte messbecher unterstellen")
-        print("DONE")
+    def check_flow_rate_calibration(self):
+        return_type, data = glob_var.pump_process_output_queue.get()
+        if return_type == "flow_rate_calibration_done":
+            pass
+            # calibration_value = float(helper.Numpad(None, "float", "Ergebnis in ml:"))
+        else:
+            self.after(500, self.check_flow_rate_calibration)
+
+    def flow_rate_calibration(self):
+        info_message = helper.InfoMessage(title="Flussrate justieren", message="Bitte messbecher unterstellen")
+        self.after(5000, info_message.withdraw())
+
+        glob_var.pump_process_input_queue.put(("flowrate_calibration", None, None))
+        self.check_flow_rate_calibration()
 
     def start_stop_pump(self):
         if self.pumping_bool:

@@ -4,7 +4,7 @@ import glob_style
 
 
 class Numpad(ctk.CTkToplevel):
-    def __init__(self, input_field, input_type, info_message):
+    def __init__(self, input_field, input_type, info_message, return_mode="entry"):
         super().__init__()
         self.geometry(glob_style.screen_resolution)
         self.attributes("-fullscreen", True)
@@ -13,6 +13,7 @@ class Numpad(ctk.CTkToplevel):
         self.input_field = input_field
         self.input_type = input_type
         self.info_message = info_message
+        self.return_mode = return_mode
 
         self.grid_columnconfigure((0, 1, 2, 3), weight=1)
         self.grid_rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
@@ -91,9 +92,10 @@ class Numpad(ctk.CTkToplevel):
             self.value_display.delete((len(current_input) - 1), ctk.END)
 
     def enter(self):
-        self.input_field.delete(0, ctk.END)
-        self.input_field.insert(0, self.value_display.get())
-        self.withdraw()
+        if self.return_mode == "entry":
+            self.input_field.delete(0, ctk.END)
+            self.input_field.insert(0, self.value_display.get())
+            self.withdraw()
 
 
 class InfoMessage(ctk.CTkToplevel):

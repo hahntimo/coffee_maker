@@ -145,7 +145,7 @@ class PumpController(multiprocessing.Process):
         self.output_queue = output_queue
 
         self.revolution = 0
-        self.direction = 1
+        self.direction = 0
 
         self.theoretical_delay = 0  # theoretical pause between steps
         self.runtime_delay = 0  # delay occurring through runtime delay
@@ -161,6 +161,11 @@ class PumpController(multiprocessing.Process):
         self.MOTOR_PIN_3 = 18
 
     def run(self):
+        with open(calibration_json_path, "r") as json_file:
+            config_json = json.load(json_file)
+        self.runtime_delay = config_json["pump_motor_delay"]
+        self.ml_per_revolution = config_json["pump_ml_per_rotation"]
+
         self.set_pins()
         threading.Thread(target=self.handler).start()
 
