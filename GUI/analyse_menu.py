@@ -338,7 +338,7 @@ class WaterFlowMenu(ctk.CTkToplevel):
         self.angle_label.grid(row=1, column=1, padx=7, pady=7)
 
         self.set_angle_button = ctk.CTkButton(self, text="setzen", font=glob_style.menu_button_font,
-                                              command=lambda _: glob_var.switch_process_input_queue.put(("set_angle", self.servo_angle.get())))
+                                              command=lambda: glob_var.switch_process_input_queue.put(("set_angle", self.servo_angle.get())))
         self.set_angle_button.grid(row=2, column=1, padx=7, pady=7)
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
