@@ -323,7 +323,7 @@ class WaterFlowMenu(ctk.CTkToplevel):
         self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure((0, 1), weight=1)
-        self.grid_rowconfigure((0, 1, 2), weight=1)
+        self.grid_rowconfigure((0, 1, 2, 3), weight=1)
 
         self.servo_angle = ctk.IntVar(self, 90)
 
@@ -331,20 +331,21 @@ class WaterFlowMenu(ctk.CTkToplevel):
         self.menu_label.grid(row=0, column=0, columnspan=2, padx=5, pady=15)
 
         self.angle_slider = ctk.CTkSlider(self, from_=40, to=160, number_of_steps=120, variable=self.servo_angle,
-                                          orientation="vertical", command=self.change_angle)
-        self.angle_slider.grid(row=1, column=0, sticky="ns", padx=7, pady=7, ipadx=20)
+                                          orientation="vertical", command=lambda _: self.angle_label.configure(text=f"{self.servo_angle.get()}°"))
+        self.angle_slider.grid(row=1, column=0, rowspan=2, sticky="ns", padx=7, pady=7, ipadx=20)
 
         self.angle_label = ctk.CTkLabel(self, text="90°", font=ctk.CTkFont(size=40))
         self.angle_label.grid(row=1, column=1, padx=7, pady=7)
 
+        self.set_angle_button = ctk.CTkButton(self, text="setzen", font=glob_style.menu_button_font,
+                                              command=lambda _: glob_var.switch_process_input_queue.put(("set_angle", self.servo_angle.get())))
+        self.set_angle_button.grid(row=2, column=1, padx=7, pady=7)
+
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
-        self.return_menu_button.grid(row=2, column=0, columnspan=2, sticky="wen", padx=7, pady=7)
+        self.return_menu_button.grid(row=3, column=0, columnspan=2, sticky="wen", padx=7, pady=7)
 
     def return_menu(self):
         glob_var.main_menu_frame.deiconify()
         self.withdraw()
 
-    def change_angle(self, *args):
-        self.angle_label.configure(text=f"{self.servo_angle.get()}°")
-        glob_var.switch_process_input_queue.put(("set_angle", self.servo_angle.get()))
