@@ -323,7 +323,7 @@ class WaterFlowMenu(ctk.CTkToplevel):
         self.config(cursor=glob_style.cursor)
 
         self.grid_columnconfigure((0, 1), weight=1)
-        self.grid_rowconfigure((0, 1, 2, 3), weight=1)
+        self.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
 
         self.servo_angle = ctk.IntVar(self, 90)
 
@@ -341,9 +341,13 @@ class WaterFlowMenu(ctk.CTkToplevel):
                                               command=lambda: glob_var.switch_process_input_queue.put(("set_angle", self.servo_angle.get())))
         self.set_angle_button.grid(row=2, column=1, padx=7, pady=7)
 
+        self.servo_test_button = ctk.CTkButton(self, text="Servo-Test", font=glob_style.menu_button_font,
+                                               command=lambda: glob_var.switch_process_input_queue.put(("servo_test", None)))
+        self.servo_test_button.grid(row=3, column=0, columnspan=2, sticky="news", padx=7, pady=7)
+
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
-        self.return_menu_button.grid(row=3, column=0, columnspan=2, sticky="wes", padx=7, pady=7)
+        self.return_menu_button.grid(row=4, column=0, columnspan=2, sticky="wes", padx=7, pady=7)
 
     def return_menu(self):
         glob_var.main_menu_frame.deiconify()
