@@ -97,6 +97,10 @@ def run():
                                                 output_queue=glob_var.heater_process_output_queue)
         glob_var.heater_process.start()
 
+        # switch
+        glob_var.switch_process = motors.SwitchController(task_queue=glob_var.switch_process_input_queue,
+                                                          output_queue=glob_var.switch_process_output_queue)
+
     else:
         print("OS:", operating_platform)
 

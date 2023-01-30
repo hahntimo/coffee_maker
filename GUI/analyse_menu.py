@@ -20,7 +20,7 @@ class AnalysisMenu(ctk.CTkToplevel):
         self.fullscreen_bool = True
 
         self.grid_columnconfigure((0, 1, 2), weight=1)
-        self.grid_rowconfigure((1, 2, 3), weight=1)
+        self.grid_rowconfigure((1, 2, 3, 4), weight=1)
 
         self.menu_label = ctk.CTkLabel(self, text="Analysemenü", font=ctk.CTkFont(size=25))
         self.menu_label.grid(row=0, column=0, columnspan=3, padx=5, pady=15)
@@ -37,17 +37,21 @@ class AnalysisMenu(ctk.CTkToplevel):
                                                       command=self.start_heating_element_menu)
         self.start_heater_menu_button.grid(row=3, column=0, columnspan=3, sticky="news", padx=7, pady=7)
 
+        self.start_water_flow_menu_button = ctk.CTkButton(self, text="Wasserweiche", font=glob_style.menu_button_font,
+                                                          command=self.start_water_flow_menu)
+        self.start_water_flow_menu_button.grid(row=4, column=0, columnspan=3, sticky="news", padx=7, pady=7)
+
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
-        self.return_menu_button.grid(row=4, column=0, sticky="we", padx=7, pady=7)
+        self.return_menu_button.grid(row=5, column=0, sticky="we", padx=7, pady=7)
 
         self.minimize_maximize_button = ctk.CTkButton(self, text="minimireren", command=self.minimize_maximize,
                                                       height=40, font=ctk.CTkFont(size=20))
-        self.minimize_maximize_button.grid(row=4, column=1, sticky="we", padx=7, pady=7)
+        self.minimize_maximize_button.grid(row=5, column=1, sticky="we", padx=7, pady=7)
 
         self.shutdown_button = ctk.CTkButton(self, text="schließen", command=self.shutdown_app, height=40,
                                              font=ctk.CTkFont(size=20))
-        self.shutdown_button.grid(row=4, column=2, sticky="we", padx=7, pady=7)
+        self.shutdown_button.grid(row=5, column=2, sticky="we", padx=7, pady=7)
 
     def start_pump_menu(self):
         glob_var.analyse_pump_frame = PumpMenu()
@@ -59,6 +63,10 @@ class AnalysisMenu(ctk.CTkToplevel):
 
     def start_heating_element_menu(self):
         glob_var.analyse_heating_element_frame = HeatingElementMenu()
+        # self.withdraw()
+
+    def start_water_flow_menu(self):
+        glob_var.analyse_water_flow_frame = WaterFlowMenu()
         # self.withdraw()
 
     def return_menu(self):
@@ -305,3 +313,38 @@ class HeatingElementMenu(ctk.CTkToplevel):
     def return_menu(self):
         glob_var.analysis_menu_frame.deiconify()
         self.withdraw()
+
+
+class WaterFlowMenu(ctk.CTkToplevel):
+    def __init__(self):
+        super().__init__()
+        self.geometry(glob_style.screen_resolution)
+        self.attributes("-fullscreen", True)
+        self.config(cursor=glob_style.cursor)
+
+        self.grid_columnconfigure((0, 1), weight=1)
+        self.grid_rowconfigure((0, 1, 2), weight=1)
+
+        self.servo_angle = ctk.IntVar(self, 90)
+
+        self.menu_label = ctk.CTkLabel(self, text="Wasserweiche", font=ctk.CTkFont(size=25))
+        self.menu_label.grid(row=0, column=0, columnspan=2, padx=5, pady=15)
+
+        self.angle_slider = ctk.CTkSlider(self, from_=40, to=160, number_of_steps=120, variable=self.servo_angle,
+                                          orientation="vertical", command=self.change_angle)
+        self.angle_slider.grid(row=1, column=0, sticky="ns", padx=7, pady=7, ipadx=20)
+
+        self.angle_label = ctk.CTkLabel(self, text="90°", font=ctk.CTkFont(size=40))
+        self.angle_label.grid(row=1, column=1, padx=7, pady=7)
+
+        self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
+                                                command=self.return_menu, height=40)
+        self.return_menu_button.grid(row=2, column=0, columnspan=2, sticky="wen", padx=7, pady=7)
+
+    def return_menu(self):
+        glob_var.main_menu_frame.deiconify()
+        self.withdraw()
+
+    def change_angle(self, *args):
+        self.angle_label.configure(text=f"{self.servo_angle.get()}°")
+        glob_var.switch_process_input_queue.put(("set_angle", self.servo_angle.get()))

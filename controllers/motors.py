@@ -230,3 +230,28 @@ class Heater(multiprocessing.Process):
                 time.sleep(0.5)
                 self.output_queue.put(("current_temp", current_temp))
 
+
+class SwitchController(multiprocessing.Process):
+    def __init__(self, task_queue, output_queue):
+        multiprocessing.Process.__init__(self)
+        self.task_queue = task_queue
+        self.output_queue = output_queue
+        self.servo = None
+
+        self.SERVO_PIN = 13
+
+    def set_pins(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.SERVO_PIN, GPIO.OUT)
+        self.servo = GPIO.PWM(self.SERVO_PIN, 50)
+        self.servo.start(90)
+
+    def run(self):
+        self.set_pins()
+        while True:
+            new_task, data = self.task_queue.get()
+
+            if new_task == "set_angle":
+                print("SET ANGLE:", data)
+                self.servo.ChangeDutyCycle(data)
+
