@@ -6,6 +6,7 @@ import multiprocessing
 import RPi.GPIO as GPIO
 from w1thermsensor import W1ThermSensor
 
+GPIO.setwarnings(False)
 
 calibration_json_path = f"{os.path.dirname(os.path.abspath('__main__'))}/configs/calibration.json"
 spinner_calibration_diff = None
@@ -255,6 +256,6 @@ class SwitchController(multiprocessing.Process):
 
             if new_task == "set_angle":
                 print("SET ANGLE:", data)
-                angle_signal = (data/18) + 2
+                angle_signal = data / 18 + 2
                 self.servo.ChangeDutyCycle(angle_signal)
 
