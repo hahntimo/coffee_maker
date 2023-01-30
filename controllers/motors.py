@@ -240,7 +240,6 @@ class SwitchController(multiprocessing.Process):
         self.servo = None
 
         self.SERVO_PIN = 13
-        self.run()
 
     def set_pins(self):
         GPIO.setmode(GPIO.BCM)

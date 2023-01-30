@@ -100,6 +100,7 @@ def run():
         # switch
         glob_var.switch_process = motors.SwitchController(task_queue=glob_var.switch_process_input_queue,
                                                           output_queue=glob_var.switch_process_output_queue)
+        glob_var.switch_process.start()
 
     else:
         print("OS:", operating_platform)
