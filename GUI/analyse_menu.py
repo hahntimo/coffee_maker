@@ -343,7 +343,7 @@ class WaterFlowMenu(ctk.CTkToplevel):
 
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
-        self.return_menu_button.grid(row=3, column=0, columnspan=2, sticky="wen", padx=7, pady=7)
+        self.return_menu_button.grid(row=3, column=0, columnspan=2, sticky="wes", padx=7, pady=7)
 
     def return_menu(self):
         glob_var.main_menu_frame.deiconify()
