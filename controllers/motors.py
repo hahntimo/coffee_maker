@@ -238,6 +238,8 @@ class SwitchController(multiprocessing.Process):
         self.task_queue = task_queue
         self.output_queue = output_queue
         self.servo = None
+        self.min_duty = 1000
+        self.max_duty = 9000
 
         self.SERVO_PIN = 13
 
@@ -254,7 +256,7 @@ class SwitchController(multiprocessing.Process):
             new_task, data = self.task_queue.get()
 
             if new_task == "set_angle":
-                angle_signal = data / 18 + 2
+                angle_signal = int(self.min_duty + (self.max_duty - self.min_duty) * (data/180))
                 print("SET ANGLE:", f"{data}°", angle_signal)
 
                 GPIO.output(self.SERVO_PIN, True)
