@@ -239,6 +239,7 @@ class SwitchController(multiprocessing.Process):
         self.servo = None
 
         self.SERVO_PIN = 13
+        self.run()
 
     def set_pins(self):
         GPIO.setmode(GPIO.BCM)
@@ -247,6 +248,7 @@ class SwitchController(multiprocessing.Process):
         self.servo.start(90)
 
     def run(self):
+        print("switch process running")
         self.set_pins()
         while True:
             new_task, data = self.task_queue.get()
