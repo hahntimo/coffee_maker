@@ -334,7 +334,9 @@ class WaterFlowMenu(ctk.CTkToplevel):
         self.label_heater.grid(row=1, column=0, padx=7, pady=7)
 
         self.angle_slider = ctk.CTkSlider(self, from_=65, to=155, number_of_steps=1, variable=self.servo_angle,
-                                          orientation="vertical", command=lambda _: glob_var.switch_process_input_queue.put(("set_angle", self.servo_angle.get())))
+                                          orientation="vertical")
+        self.angle_slider.bind("<ButtonRelease-1>", lambda _: glob_var.switch_process_input_queue.put(("set_angle",
+                                                                                                       self.servo_angle.get())))
         self.angle_slider.grid(row=2, column=0, sticky="ns", padx=7, pady=7, ipadx=20)
 
         self.label_brew_arm = ctk.CTkLabel(self, text="Brüharm", font=glob_style.menu_button_font)
@@ -343,8 +345,6 @@ class WaterFlowMenu(ctk.CTkToplevel):
         self.return_menu_button = ctk.CTkButton(self, text="\u21E6", font=glob_style.menu_button_font,
                                                 command=self.return_menu, height=40)
         self.return_menu_button.grid(row=4, column=0, sticky="wes", padx=7, pady=7)
-
-
 
     def return_menu(self):
         glob_var.main_menu_frame.deiconify()
