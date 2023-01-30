@@ -330,7 +330,7 @@ class WaterFlowMenu(ctk.CTkToplevel):
         self.menu_label = ctk.CTkLabel(self, text="Wasserweiche", font=ctk.CTkFont(size=25))
         self.menu_label.grid(row=0, column=0, columnspan=2, padx=5, pady=15)
 
-        self.angle_slider = ctk.CTkSlider(self, from_=40, to=140, number_of_steps=100, variable=self.servo_angle,
+        self.angle_slider = ctk.CTkSlider(self, from_=0, to=180, number_of_steps=180, variable=self.servo_angle,
                                           orientation="vertical", command=lambda _: self.angle_label.configure(text=f"{self.servo_angle.get()}°"))
         self.angle_slider.grid(row=1, column=0, rowspan=2, sticky="ns", padx=7, pady=7, ipadx=20)
 
