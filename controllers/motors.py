@@ -256,5 +256,8 @@ class SwitchController(multiprocessing.Process):
             if new_task == "set_angle":
                 print("SET ANGLE:", data)
                 angle_signal = data / 18 + 2
+                GPIO.output(self.SERVO_PIN, True)
                 self.servo.ChangeDutyCycle(angle_signal)
-
+                time.sleep(0.5)
+                GPIO.output(self.SERVO_PIN, False)
+                self.servo.ChangeDutyCycle(angle_signal)
