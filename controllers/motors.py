@@ -245,7 +245,7 @@ class SwitchController(multiprocessing.Process):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         self.servo = GPIO.PWM(self.SERVO_PIN, 50)
-        self.servo.start(0)
+        # self.servo.start(0)
 
     def run(self):
         print("switch process running")
@@ -254,10 +254,14 @@ class SwitchController(multiprocessing.Process):
             new_task, data = self.task_queue.get()
 
             if new_task == "set_angle":
-                print("SET ANGLE:", data)
                 angle_signal = data / 18 + 2
-                GPIO.output(self.SERVO_PIN, True)
-                self.servo.ChangeDutyCycle(angle_signal)
-                time.sleep(0.5)
-                GPIO.output(self.SERVO_PIN, False)
-                self.servo.ChangeDutyCycle(angle_signal)
+                print("SET ANGLE:", f"{data}°", angle_signal)
+
+                self.servo.start(angle_signal)
+                time.sleep(1)
+                self.servo.stop()
+                # GPIO.output(self.SERVO_PIN, True)
+                # self.servo.ChangeDutyCycle(angle_signal)
+                # time.sleep(0.5)
+                # GPIO.output(self.SERVO_PIN, False)
+                # self.servo.ChangeDutyCycle(angle_signal)
